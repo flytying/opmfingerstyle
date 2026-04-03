@@ -1,4 +1,5 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+dotenv.config({ path: ".env.local", override: true });
 import { runArticleGeneration } from "../src/lib/article-agent";
 
 async function main() {

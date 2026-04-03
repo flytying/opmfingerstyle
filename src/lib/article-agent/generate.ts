@@ -31,7 +31,9 @@ export async function generateArticle(
   research: ResearchData[],
   recentTitles: string[]
 ): Promise<GeneratedArticle> {
-  const client = new Anthropic();
+  const client = new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY,
+  });
 
   const researchContext = research
     .flatMap((r) =>
