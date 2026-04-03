@@ -13,6 +13,7 @@ export async function updateProfile(guitaristId: string, formData: FormData) {
       bio_short: formData.get("bio_short") as string,
       bio_full: (formData.get("bio_full") as string) || null,
       youtube_channel_url: (formData.get("youtube_channel_url") as string) || null,
+      profile_photo_url: (formData.get("profile_photo_url") as string) || null,
     })
     .eq("id", guitaristId);
 

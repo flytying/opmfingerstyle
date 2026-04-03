@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import type { SocialPlatform } from "@/lib/supabase/types";
 import { slugify } from "@/lib/utils";
+import { notifyNewSubmission } from "@/lib/email";
 
 export async function submitProfile(formData: FormData) {
   const displayName = formData.get("display_name") as string;
@@ -11,6 +12,7 @@ export async function submitProfile(formData: FormData) {
   const youtubeChannelUrl = formData.get("youtube_channel_url") as string;
   const location = (formData.get("location") as string) || null;
   const bioFull = (formData.get("bio_full") as string) || null;
+  const profilePhotoUrl = (formData.get("profile_photo_url") as string) || null;
 
   // Validate required fields
   if (!displayName || !contactEmail || !bioShort || !youtubeChannelUrl) {
@@ -49,6 +51,7 @@ export async function submitProfile(formData: FormData) {
       youtube_channel_url: youtubeChannelUrl,
       location,
       bio_full: bioFull,
+      profile_photo_url: profilePhotoUrl,
       approval_status: "pending_review",
     })
     .select("id")
@@ -77,6 +80,9 @@ export async function submitProfile(formData: FormData) {
       }))
     );
   }
+
+  // Notify admin (non-blocking)
+  notifyNewSubmission(displayName, contactEmail);
 
   return { success: true };
 }

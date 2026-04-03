@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { notifyNewContactMessage } from "@/lib/email";
 
 export async function submitContact(formData: FormData) {
   const name = formData.get("name") as string;
@@ -25,6 +26,9 @@ export async function submitContact(formData: FormData) {
     console.error("Contact submission failed:", error);
     return { success: false, error: "Failed to send message. Please try again." };
   }
+
+  // Notify admin (non-blocking)
+  notifyNewContactMessage(name, subject);
 
   return { success: true };
 }

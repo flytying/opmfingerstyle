@@ -3,16 +3,19 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { updateProfile } from "./actions";
+import { PhotoUpload } from "@/components/ui/photo-upload";
 import type { Guitarist } from "@/lib/supabase/types";
 
 export function ProfileEditForm({ guitarist }: { guitarist: Guitarist }) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [photoUrl, setPhotoUrl] = useState(guitarist.profile_photo_url || "");
 
   async function handleSave(formData: FormData) {
     setSaving(true);
     setMessage("");
+    formData.set("profile_photo_url", photoUrl);
     const result = await updateProfile(guitarist.id, formData);
     setSaving(false);
     setMessage(result.success ? "Profile updated!" : (result.error || "Failed to save."));
@@ -26,6 +29,17 @@ export function ProfileEditForm({ guitarist }: { guitarist: Guitarist }) {
           {message}
         </div>
       )}
+
+      <div>
+        <label className="block text-sm font-medium text-foreground">Profile Photo</label>
+        <div className="mt-2">
+          <PhotoUpload
+            currentUrl={guitarist.profile_photo_url}
+            folder={`guitarists/${guitarist.id}`}
+            onUploaded={setPhotoUrl}
+          />
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>

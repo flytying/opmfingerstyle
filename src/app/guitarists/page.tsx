@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { GuitaristCard } from "@/components/ui/guitarist-card";
+import { SearchBar } from "./search-bar";
 
 export const metadata: Metadata = {
   title: "Guitarist Directory",
@@ -8,12 +10,24 @@ export const metadata: Metadata = {
     "Browse our directory of talented Filipino fingerstyle guitarists performing OPM songs.",
 };
 
-export default async function GuitaristsPage() {
+interface Props {
+  searchParams: Promise<{ q?: string }>;
+}
+
+export default async function GuitaristsPage({ searchParams }: Props) {
+  const { q } = await searchParams;
   const supabase = await createClient();
-  const { data: guitarists } = await supabase
+
+  let query = supabase
     .from("guitarists")
     .select("slug, display_name, location, bio_short, profile_photo_url")
-    .eq("approval_status", "approved")
+    .eq("approval_status", "approved");
+
+  if (q) {
+    query = query.or(`display_name.ilike.%${q}%,location.ilike.%${q}%`);
+  }
+
+  const { data: guitarists } = await query
     .order("featured", { ascending: false })
     .order("display_name");
 
@@ -29,6 +43,12 @@ export default async function GuitaristsPage() {
         </p>
       </div>
 
+      <div className="mb-8 max-w-md">
+        <Suspense>
+          <SearchBar />
+        </Suspense>
+      </div>
+
       {guitarists && guitarists.length > 0 ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {guitarists.map((guitarist) => (
@@ -38,14 +58,16 @@ export default async function GuitaristsPage() {
       ) : (
         <div className="rounded-xl border border-border bg-surface px-6 py-16 text-center">
           <p className="text-lg text-muted">
-            No guitarists listed yet. Be the first!
+            {q ? `No guitarists found for "${q}".` : "No guitarists listed yet. Be the first!"}
           </p>
-          <a
-            href="/submit"
-            className="mt-4 inline-flex items-center rounded-full bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary-hover"
-          >
-            Submit Your Profile
-          </a>
+          {!q && (
+            <a
+              href="/submit"
+              className="mt-4 inline-flex items-center rounded-full bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary-hover"
+            >
+              Submit Your Profile
+            </a>
+          )}
         </div>
       )}
     </div>

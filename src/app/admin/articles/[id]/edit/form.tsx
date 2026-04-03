@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { saveArticle } from "./actions";
+import { RichEditor } from "@/components/ui/rich-editor";
 import type { Article } from "@/lib/supabase/types";
 
 interface Props {
@@ -14,10 +15,12 @@ export function ArticleEditorForm({ article, isNew }: Props) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [body, setBody] = useState(article?.body || "");
 
   async function handleSave(formData: FormData) {
     setSaving(true);
     setMessage("");
+    formData.set("body", body);
     const result = await saveArticle(article?.id || null, formData);
     setSaving(false);
     if (result.success) {
@@ -83,15 +86,10 @@ export function ArticleEditorForm({ article, isNew }: Props) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-foreground">Body (HTML)</label>
-        <textarea
-          name="body"
-          required
-          rows={16}
-          defaultValue={article?.body || ""}
-          className="mt-1 block w-full rounded-lg border border-border px-3 py-2 font-mono text-sm"
-          placeholder="Write your article content in HTML..."
-        />
+        <label className="block text-sm font-medium text-foreground">Body</label>
+        <div className="mt-1">
+          <RichEditor content={body} onChange={setBody} />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

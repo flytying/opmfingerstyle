@@ -1,15 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { submitProfile } from "./actions";
+import Image from "next/image";
+import { createClient } from "@/lib/supabase/client";
 
 export function SubmitProfileForm() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/") || file.size > 5 * 1024 * 1024) return;
+
+    setUploading(true);
+    const supabase = createClient();
+    const ext = file.name.split(".").pop();
+    const fileName = `submissions/${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("photos").upload(fileName, file);
+    if (!error) {
+      const { data: { publicUrl } } = supabase.storage.from("photos").getPublicUrl(fileName);
+      setPhotoUrl(publicUrl);
+    }
+    setUploading(false);
+  }
 
   async function handleSubmit(formData: FormData) {
     setStatus("submitting");
     setErrorMessage("");
+
+    if (photoUrl) {
+      formData.set("profile_photo_url", photoUrl);
+    }
 
     const result = await submitProfile(formData);
 
@@ -81,6 +107,26 @@ export function SubmitProfileForm() {
           <p className="mt-1 text-xs text-muted">
             Used to create your account upon approval. Not displayed publicly.
           </p>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-foreground">
+            Profile Photo
+          </label>
+          <div
+            onClick={() => fileRef.current?.click()}
+            className="mt-1 flex h-32 w-32 cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-border bg-gray-50 hover:border-primary hover:bg-primary-light"
+          >
+            {photoUrl ? (
+              <Image src={photoUrl} alt="Preview" width={128} height={128} className="h-full w-full object-cover" />
+            ) : (
+              <div className="text-center text-xs text-gray-500">
+                {uploading ? "Uploading..." : "Click to upload"}
+              </div>
+            )}
+          </div>
+          <input ref={fileRef} type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
+          <p className="mt-1 text-xs text-muted">JPG, PNG or WebP. Max 5MB.</p>
         </div>
 
         <div>
