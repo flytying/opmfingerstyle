@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { AuthButtons } from "./auth-buttons";
-import { MobileMenu } from "./mobile-menu";
 
 const navLinks = [
   { href: "/guitarists", label: "Guitarists" },
