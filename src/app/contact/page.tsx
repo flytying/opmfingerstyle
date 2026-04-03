@@ -18,21 +18,6 @@ export default function ContactPage() {
       </p>
 
       <ContactForm />
-
-      <div className="mt-12 space-y-4">
-        <div className="rounded-xl border border-border p-6">
-          <h2 className="font-semibold text-foreground">Partnerships & Sponsorships</h2>
-          <p className="mt-2 text-muted">
-            Interested in featuring your products or collaborating with us? Reach out at{" "}
-            <a
-              href="mailto:hello@opmfingerstyle.com"
-              className="font-medium text-primary hover:text-primary-hover"
-            >
-              hello@opmfingerstyle.com
-            </a>
-          </p>
-        </div>
-      </div>
     </div>
   );
 }

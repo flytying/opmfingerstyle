@@ -78,14 +78,20 @@ export function ContactForm() {
         <label htmlFor="subject" className="block text-sm font-medium text-foreground">
           Subject *
         </label>
-        <input
-          type="text"
+        <select
           id="subject"
           name="subject"
           required
-          className="mt-1 block w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-gray-400 focus:border-primary focus:ring-1 focus:ring-primary"
-          placeholder="What's this about?"
-        />
+          className="mt-1 block w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:ring-1 focus:ring-primary"
+        >
+          <option value="">Select a topic</option>
+          <option value="General Inquiry">General Inquiry</option>
+          <option value="Partnerships & Sponsorships">Partnerships & Sponsorships</option>
+          <option value="Profile Submission Issue">Profile Submission Issue</option>
+          <option value="Bug Report">Bug Report</option>
+          <option value="Feedback & Suggestions">Feedback & Suggestions</option>
+          <option value="Other">Other</option>
+        </select>
       </div>
 
       <div>
