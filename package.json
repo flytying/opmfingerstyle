@@ -8,9 +8,11 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "generate-article": "tsx scripts/generate-article.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.82.0",
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.101.1",
     "@tiptap/extension-image": "^3.22.1",
@@ -19,6 +21,7 @@
     "@tiptap/pm": "^3.22.1",
     "@tiptap/react": "^3.22.1",
     "@tiptap/starter-kit": "^3.22.1",
+    "dotenv": "^17.4.0",
     "next": "16.2.2",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -36,6 +39,7 @@
     "eslint-config-next": "16.2.2",
     "jsdom": "^29.0.1",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5",
     "vitest": "^4.1.2"
   }

@@ -48,9 +48,9 @@ export default async function AdminDashboard() {
       highlight: false,
     },
     {
-      label: "Published Articles",
+      label: "Published Articles (Auto)",
       value: articleCount ?? 0,
-      href: "/admin/articles",
+      href: "/admin",
       highlight: false,
     },
   ];
