@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getYouTubeThumbnail } from "@/lib/utils";
 
 interface VideoCardProps {
   video: {
@@ -9,18 +10,6 @@ interface VideoCardProps {
   };
   guitaristName?: string;
   guitaristSlug?: string;
-}
-
-function getYouTubeId(url: string): string | null {
-  const match = url.match(
-    /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|shorts\/))([a-zA-Z0-9_-]{11})/
-  );
-  return match?.[1] ?? null;
-}
-
-function getYouTubeThumbnail(url: string): string | null {
-  const id = getYouTubeId(url);
-  return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : null;
 }
 
 export function VideoCard({ video, guitaristName, guitaristSlug }: VideoCardProps) {

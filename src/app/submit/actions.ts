@@ -2,15 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import type { SocialPlatform } from "@/lib/supabase/types";
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .trim();
-}
+import { slugify } from "@/lib/utils";
 
 export async function submitProfile(formData: FormData) {
   const displayName = formData.get("display_name") as string;
