@@ -1,7 +1,7 @@
 import { getWeeklyTopic } from "./topics";
 import { searchWeb } from "./research";
 import { generateArticle } from "./generate";
-import { getUnsplashImage } from "./images";
+import { getFeaturedImage } from "./images";
 import { publishArticle, getRecentArticleTitles } from "./publish";
 
 export async function runArticleGeneration() {
@@ -28,7 +28,7 @@ export async function runArticleGeneration() {
 
   // 5. Get featured image
   console.log("[agent] Fetching featured image...");
-  const imageUrl = await getUnsplashImage(topic.unsplashKeywords);
+  const imageUrl = await getFeaturedImage(topic.unsplashKeywords);
 
   // 6. Publish to Supabase
   console.log("[agent] Publishing...");
