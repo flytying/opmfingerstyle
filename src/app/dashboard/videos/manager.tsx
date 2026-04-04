@@ -4,29 +4,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { removeVideo, updateVideo } from "./actions";
+import { removeVideo } from "./actions";
 import { getYouTubeId } from "@/lib/utils";
 import type { GuitaristVideo } from "@/lib/supabase/types";
 
 export function VideosManager({ videos }: { videos: GuitaristVideo[] }) {
   const router = useRouter();
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
-
-  async function handleUpdate(videoId: string, formData: FormData) {
-    setSaving(true);
-    setMessage("");
-    const result = await updateVideo(videoId, formData);
-    setSaving(false);
-    if (result.success) {
-      setMessage("Video updated!");
-      setEditingId(null);
-      router.refresh();
-    } else {
-      setMessage(result.error || "Failed to update.");
-    }
-  }
 
   async function handleRemove(videoId: string) {
     if (!confirm("Remove this video?")) return;
@@ -67,39 +51,6 @@ export function VideosManager({ videos }: { videos: GuitaristVideo[] }) {
                 const ytId = getYouTubeId(v.youtube_url);
                 const thumb = ytId ? `https://img.youtube.com/vi/${ytId}/mqdefault.jpg` : null;
 
-                if (editingId === v.id) {
-                  return (
-                    <tr key={v.id} className="border-b border-border last:border-0">
-                      <td colSpan={3} className="p-4">
-                        <form action={(formData) => handleUpdate(v.id, formData)} className="space-y-3">
-                          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                            <div>
-                              <label className="block text-xs font-medium text-muted">Title</label>
-                              <input name="title" defaultValue={v.title || ""} className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-muted">YouTube URL</label>
-                              <input name="youtube_url" defaultValue={v.youtube_url} className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
-                            </div>
-                            <div className="sm:col-span-2">
-                              <label className="block text-xs font-medium text-muted">Description</label>
-                              <textarea name="description" defaultValue={v.description || ""} rows={3} className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
-                            </div>
-                          </div>
-                          <div className="flex gap-2">
-                            <button type="submit" disabled={saving} className="rounded-full bg-primary px-4 py-1.5 text-sm font-medium text-white hover:bg-primary-hover disabled:opacity-50">
-                              {saving ? "Saving..." : "Save"}
-                            </button>
-                            <button type="button" onClick={() => setEditingId(null)} className="rounded-full border border-border px-4 py-1.5 text-sm font-medium text-muted hover:text-foreground">
-                              Cancel
-                            </button>
-                          </div>
-                        </form>
-                      </td>
-                    </tr>
-                  );
-                }
-
                 return (
                   <tr key={v.id} className="border-b border-border last:border-0">
                     <td className="px-4 py-3">
@@ -132,9 +83,9 @@ export function VideosManager({ videos }: { videos: GuitaristVideo[] }) {
                     </td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex justify-end gap-4">
-                        <button onClick={() => setEditingId(v.id)} className="text-sm font-medium text-foreground hover:text-muted">
+                        <Link href={`/dashboard/videos/${v.id}/edit`} className="text-sm font-medium text-foreground hover:text-muted">
                           Edit
-                        </button>
+                        </Link>
                         <button onClick={() => handleRemove(v.id)} className="text-sm text-red-600 hover:text-red-800">
                           Remove
                         </button>
