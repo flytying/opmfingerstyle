@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { updateEmail, updatePassword } from "./actions";
 
 export function SettingsForm({ email }: { email: string }) {
+  const router = useRouter();
   const [emailMsg, setEmailMsg] = useState("");
   const [passwordMsg, setPasswordMsg] = useState("");
   const [savingEmail, setSavingEmail] = useState(false);
@@ -22,7 +25,14 @@ export function SettingsForm({ email }: { email: string }) {
     setPasswordMsg("");
     const result = await updatePassword(formData);
     setSavingPassword(false);
-    setPasswordMsg(result.success ? "Password updated!" : (result.error || "Failed."));
+    if (result.success) {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      router.push("/login");
+      router.refresh();
+      return;
+    }
+    setPasswordMsg(result.error || "Failed.");
   }
 
   return (
