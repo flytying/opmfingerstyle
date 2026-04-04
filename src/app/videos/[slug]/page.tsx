@@ -217,40 +217,6 @@ export default async function VideoDetailPage({ params }: Props) {
               )}
             </div>
 
-            {/* More videos from this artist */}
-            {moreVideos && moreVideos.length > 0 && (
-              <div className="mt-10">
-                <h2 className="text-xl font-bold text-foreground">
-                  More from {g?.display_name}
-                </h2>
-                <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  {moreVideos.map((v) => {
-                    const vId = getYouTubeId(v.youtube_url);
-                    const vHref = v.slug ? `/videos/${v.slug}` : `/videos/${v.id}`;
-                    return (
-                      <Link
-                        key={v.id}
-                        href={vHref}
-                        className="group flex gap-3 rounded-lg border border-border p-3 transition-colors hover:border-primary hover:bg-primary-light"
-                      >
-                        {vId && (
-                          <Image
-                            src={`https://img.youtube.com/vi/${vId}/mqdefault.jpg`}
-                            alt={v.title || "Video"}
-                            width={112}
-                            height={64}
-                            className="shrink-0 rounded object-cover"
-                          />
-                        )}
-                        <p className="line-clamp-2 text-sm font-medium text-foreground group-hover:text-primary">
-                          {v.title || "Untitled"}
-                        </p>
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Sidebar */}
@@ -312,6 +278,54 @@ export default async function VideoDetailPage({ params }: Props) {
           </aside>
         </div>
       </div>
+
+      {/* More from this artist — full width */}
+      {moreVideos && moreVideos.length > 0 && (
+        <section className="bg-surface">
+          <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <h2 className="text-2xl font-bold text-foreground">
+              More from {g?.display_name}
+            </h2>
+            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {moreVideos.map((v) => {
+                const vId = getYouTubeId(v.youtube_url);
+                const vHref = v.slug ? `/videos/${v.slug}` : `/videos/${v.id}`;
+                return (
+                  <Link
+                    key={v.id}
+                    href={vHref}
+                    className="group overflow-hidden rounded-xl border border-border bg-background transition-shadow hover:shadow-lg"
+                  >
+                    {vId && (
+                      <div className="relative aspect-video overflow-hidden bg-gray-200">
+                        <Image
+                          src={`https://img.youtube.com/vi/${vId}/mqdefault.jpg`}
+                          alt={v.title || "Video"}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/20">
+                          <div className="rounded-full bg-white/90 p-3 shadow-lg">
+                            <svg className="h-6 w-6 text-foreground" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <div className="p-4">
+                      <h3 className="line-clamp-2 font-medium text-foreground group-hover:text-primary">
+                        {v.title || "Untitled"}
+                      </h3>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
     </>
   );
 }
