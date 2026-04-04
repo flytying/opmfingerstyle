@@ -9,62 +9,58 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <>
-      {/* Hero banner */}
-      <section className="bg-primary">
-        <div className="mx-auto flex max-w-7xl flex-col items-center px-4 pt-12 text-center sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            About OPM Fingerstyle
-          </h1>
-          <p className="mt-4 max-w-xl text-lg text-white/80">
-            The home of Filipino fingerstyle guitar — celebrating OPM one
-            arrangement at a time.
-          </p>
-          <Image
-            src="/about-hero.png"
-            alt="OPM Fingerstyle mascot — Carabao playing guitar"
-            width={320}
-            height={320}
-            className="mt-8 object-contain"
-          />
-        </div>
-      </section>
+    <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+      <h1 className="text-4xl font-bold tracking-tight text-foreground">
+        About OPM Fingerstyle
+      </h1>
 
-      {/* Content */}
-      <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="space-y-6 text-lg leading-relaxed text-muted">
-          <p>
-            OPM Fingerstyle is a curated directory dedicated to showcasing
-            talented Filipino fingerstyle guitarists who perform Original Pilipino
-            Music (OPM) songs.
-          </p>
-          <p>
-            Our mission is to create a central hub where music lovers can discover
-            guitarists, watch performances, find tablature, and explore the gear
-            that makes the music possible.
-          </p>
-          <p>
-            Whether you&apos;re a fellow guitarist looking for inspiration, a music fan
-            searching for new arrangements to enjoy, or a brand looking to connect
-            with the fingerstyle community — you&apos;re in the right place.
-          </p>
-        </div>
-
-        <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-          <Link
-            href="/guitarists"
-            className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
-          >
-            Browse Guitarists
-          </Link>
-          <Link
-            href="/submit"
-            className="inline-flex items-center justify-center rounded-full border border-border px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-surface"
-          >
-            Submit Your Profile
-          </Link>
-        </div>
+      <div className="mt-8 flex items-center justify-center overflow-hidden rounded-2xl" style={{ backgroundColor: "#D68D20" }}>
+        <Image
+          src="/about-hero.png"
+          alt="OPM Fingerstyle mascot — Carabao playing guitar"
+          width={400}
+          height={400}
+          className="object-contain"
+        />
       </div>
-    </>
+
+      <p className="mt-8 text-lg font-medium text-foreground">
+        The home of Filipino fingerstyle guitar — celebrating OPM one
+        arrangement at a time.
+      </p>
+
+      <div className="mt-6 space-y-6 text-lg leading-relaxed text-muted">
+        <p>
+          OPM Fingerstyle is a curated directory dedicated to showcasing
+          talented Filipino fingerstyle guitarists who perform Original Pilipino
+          Music (OPM) songs.
+        </p>
+        <p>
+          Our mission is to create a central hub where music lovers can discover
+          guitarists, watch performances, find tablature, and explore the gear
+          that makes the music possible.
+        </p>
+        <p>
+          Whether you&apos;re a fellow guitarist looking for inspiration, a music fan
+          searching for new arrangements to enjoy, or a brand looking to connect
+          with the fingerstyle community — you&apos;re in the right place.
+        </p>
+      </div>
+
+      <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+        <Link
+          href="/guitarists"
+          className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
+        >
+          Browse Guitarists
+        </Link>
+        <Link
+          href="/submit"
+          className="inline-flex items-center justify-center rounded-full border border-border px-6 py-3 text-sm font-medium text-foreground transition-colors hover:bg-surface"
+        >
+          Submit Your Profile
+        </Link>
+      </div>
+    </div>
   );
 }
