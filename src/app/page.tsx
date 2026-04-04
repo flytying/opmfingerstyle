@@ -41,7 +41,7 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
       />
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gray-900">
+      <section className="relative min-h-[400px] overflow-hidden bg-gray-900">
         <div className="absolute inset-0">
           <Image
             src="/hero-background.png"
@@ -50,6 +50,7 @@ export default async function Home() {
             priority
             className="object-cover opacity-40"
             sizes="100vw"
+            quality={75}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 to-gray-900/40" />
         </div>

@@ -21,7 +21,8 @@ export function Header() {
             alt="OPM Fingerstyle"
             width={48}
             height={48}
-            className="rounded-full"
+            className="h-12 w-12 rounded-full"
+            priority
           />
           <span className="text-xl font-bold tracking-tight text-foreground">
             OPM<span className="text-primary">Fingerstyle</span>
@@ -53,8 +54,7 @@ export function Header() {
 function AuthButtonsFallback() {
   return (
     <div className="flex items-center gap-3">
-      <div className="h-9 w-28 animate-pulse rounded-full bg-gray-100" />
-      <div className="hidden h-9 w-20 animate-pulse rounded-full bg-gray-100 sm:block" />
+      <div className="h-9 w-9 rounded-full bg-gray-100" />
     </div>
   );
 }
