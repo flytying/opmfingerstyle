@@ -49,6 +49,7 @@ export async function approveGuitarist(id: string) {
         role: "guitarist",
         display_name: guitarist.display_name,
       },
+      redirectTo: "https://opmfingerstyle.com/auth/confirm",
     }
   );
 
