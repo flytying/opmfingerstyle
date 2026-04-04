@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { VideosManager } from "./manager";
+import { AddVideoForm } from "./form";
 
-export default async function DashboardVideosPage() {
+export default async function AddVideoPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
@@ -15,12 +15,11 @@ export default async function DashboardVideosPage() {
 
   if (!guitarist) redirect("/");
 
-  const { data: videos } = await supabase
-    .from("guitarist_videos")
-    .select("*")
-    .eq("guitarist_id", guitarist.id)
-    .order("featured_order")
-    .order("created_at", { ascending: false });
-
-  return <VideosManager videos={videos || []} />;
+  return (
+    <div>
+      <h2 className="text-lg font-semibold text-foreground">Add New Video</h2>
+      <p className="mt-1 text-sm text-muted">Add a YouTube video to your profile.</p>
+      <AddVideoForm guitaristId={guitarist.id} />
+    </div>
+  );
 }
