@@ -6,7 +6,7 @@ const BASE_URL = "https://opmfingerstyle.com";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = await createClient();
 
-  const [{ data: guitarists }, { data: gear }, { data: articles }] =
+  const [{ data: guitarists }, { data: gear }, { data: articles }, { data: videos }] =
     await Promise.all([
       supabase
         .from("guitarists")
@@ -20,6 +20,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         .from("articles")
         .select("slug, updated_at")
         .eq("status", "published"),
+      supabase
+        .from("guitarist_videos")
+        .select("id, created_at"),
     ]);
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -55,5 +58,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...guitaristPages, ...gearPages, ...articlePages];
+  const videoPages: MetadataRoute.Sitemap = (videos || []).map((v) => ({
+    url: `${BASE_URL}/videos/${v.id}`,
+    lastModified: v.created_at,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...guitaristPages, ...videoPages, ...gearPages, ...articlePages];
 }

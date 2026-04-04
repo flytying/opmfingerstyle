@@ -4,6 +4,7 @@ import { getYouTubeThumbnail } from "@/lib/utils";
 
 interface VideoCardProps {
   video: {
+    id?: string;
     youtube_url: string;
     title: string | null;
     thumbnail_url: string | null;
@@ -14,13 +15,18 @@ interface VideoCardProps {
 
 export function VideoCard({ video, guitaristName, guitaristSlug }: VideoCardProps) {
   const thumbnail = video.thumbnail_url || getYouTubeThumbnail(video.youtube_url);
+  const href = video.id ? `/videos/${video.id}` : video.youtube_url;
+  const isInternal = !!video.id;
+
+  const linkProps = isInternal
+    ? {}
+    : { target: "_blank" as const, rel: "noopener noreferrer" };
 
   return (
     <div className="group overflow-hidden rounded-xl border border-border bg-background transition-shadow hover:shadow-lg">
-      <a
-        href={video.youtube_url}
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        href={href}
+        {...linkProps}
         className="relative block aspect-video overflow-hidden bg-gray-200"
       >
         {thumbnail && (
@@ -39,10 +45,16 @@ export function VideoCard({ video, guitaristName, guitaristSlug }: VideoCardProp
             </svg>
           </div>
         </div>
-      </a>
+      </Link>
       <div className="p-4">
         <h3 className="line-clamp-2 text-sm font-medium text-foreground">
-          {video.title || "Untitled Video"}
+          {isInternal ? (
+            <Link href={href} className="hover:text-primary">
+              {video.title || "Untitled Video"}
+            </Link>
+          ) : (
+            video.title || "Untitled Video"
+          )}
         </h3>
         {guitaristName && guitaristSlug && (
           <Link
