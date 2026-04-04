@@ -52,7 +52,7 @@ export function SocialsManager({ guitaristId, socials }: { guitaristId: string; 
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className="block text-sm font-medium text-foreground">Platform *</label>
-            <select name="platform" required className="mt-1 block w-full rounded-lg border border-border px-3 py-2 text-sm">
+            <select name="platform" required className="mt-1 block w-full appearance-none rounded-lg border border-gray-300 py-2 pl-3 pr-10 text-sm" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='2' stroke='%23737373'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m19.5 8.25-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 0.75rem center", backgroundSize: "1rem" }}>
               {platforms.map((p) => (
                 <option key={p.value} value={p.value}>{p.label}</option>
               ))}
