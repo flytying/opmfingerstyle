@@ -105,7 +105,8 @@ export async function resendInvite(id: string) {
     return { success: false, error: "Guitarist has no contact email." };
   }
 
-  const { error } = await serviceClient.auth.admin.inviteUserByEmail(
+  // Try invite first (for new users), fall back to magic link (for existing users)
+  const { error: inviteError } = await serviceClient.auth.admin.inviteUserByEmail(
     guitarist.contact_email,
     {
       data: {
@@ -116,9 +117,17 @@ export async function resendInvite(id: string) {
     }
   );
 
-  if (error) {
-    console.error("Resend invite failed:", error);
-    return { success: false, error: `Failed to resend invite: ${error.message}` };
+  if (inviteError) {
+    // User already exists — send password reset so they can set their password
+    const { error: resetError } = await serviceClient.auth.resetPasswordForEmail(
+      guitarist.contact_email,
+      { redirectTo: "https://opmfingerstyle.com/auth/confirm" }
+    );
+
+    if (resetError) {
+      console.error("Resend failed:", resetError);
+      return { success: false, error: `Failed to resend: ${resetError.message}` };
+    }
   }
 
   return { success: true };
