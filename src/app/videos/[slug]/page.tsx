@@ -63,13 +63,13 @@ export default async function VideoDetailPage({ params }: Props) {
 
   const youtubeId = getYouTubeId(video.youtube_url);
 
-  const [{ data: tabs }, { data: moreVideos }] = await Promise.all([
+  // Find tab that matches this video's title
+  const videoTitle = video.title || "";
+  const [{ data: allTabs }, { data: moreVideos }] = await Promise.all([
     supabase
       .from("tablature_links")
       .select("id, title, song_name, external_url, source_label")
-      .eq("guitarist_id", g?.id || "")
-      .order("created_at", { ascending: false })
-      .limit(5),
+      .eq("guitarist_id", g?.id || ""),
     supabase
       .from("guitarist_videos")
       .select("id, title, slug, youtube_url")
@@ -78,6 +78,14 @@ export default async function VideoDetailPage({ params }: Props) {
       .order("featured_order")
       .limit(4),
   ]);
+
+  // Match tab to this video by title similarity
+  const matchingTab = allTabs?.find((tab) => {
+    const tabTitle = tab.title.toLowerCase();
+    const vTitle = videoTitle.toLowerCase();
+    return tabTitle.includes(vTitle) || vTitle.includes(tabTitle) ||
+      (tab.song_name && vTitle.includes(tab.song_name.toLowerCase()));
+  }) || allTabs?.[0] || null; // fallback to first tab if no match
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -233,29 +241,28 @@ export default async function VideoDetailPage({ params }: Props) {
 
           {/* Sidebar */}
           <aside className="space-y-6">
-            {/* Tabs download */}
-            {tabs && tabs.length > 0 && (
-              <div className="rounded-xl border border-border bg-surface p-6">
-                <h2 className="font-bold text-foreground">Guitar Tabs</h2>
-                <p className="mt-1 text-sm text-muted">
-                  Learn to play this arrangement with accurate tablature.
+            {/* Tab download */}
+            {matchingTab && (
+              <div className="rounded-xl border border-red-100 bg-red-50 p-6">
+                <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">
+                  Get the {video.title || "Guitar"} Tab
+                </h2>
+                <p className="mt-2 text-sm text-muted">
+                  Learn to play this arrangement with accurate guitar tablature.
                 </p>
-                <div className="mt-4 space-y-2">
-                  {tabs.map((tab) => (
-                    <a
-                      key={tab.id}
-                      href={tab.external_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-between rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
-                    >
-                      <span>{tab.title}</span>
-                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                      </svg>
-                    </a>
-                  ))}
-                </div>
+                <a
+                  href={matchingTab.external_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 flex w-full items-center justify-center rounded-lg bg-red-600 px-4 py-3 text-sm font-bold uppercase tracking-wider text-white transition-colors hover:bg-red-700"
+                >
+                  Download Tab
+                </a>
+                {matchingTab.source_label && (
+                  <p className="mt-2 text-center text-xs text-muted">
+                    via {matchingTab.source_label}
+                  </p>
+                )}
               </div>
             )}
 

@@ -203,70 +203,56 @@ export default async function GuitaristProfilePage({ params }: Props) {
               </div>
             )}
 
-            {/* Info */}
+            {/* Connect */}
             <div className="rounded-xl border border-border p-6">
-              <h3 className="font-semibold text-foreground">Info</h3>
-              <dl className="mt-4 space-y-3 text-sm">
-                {guitarist.location && (
-                  <div>
-                    <dt className="text-muted">Location</dt>
-                    <dd className="font-medium text-foreground">
-                      {guitarist.location}
-                    </dd>
-                  </div>
-                )}
-                {guitarist.youtube_channel_url && (
-                  <div>
-                    <dt className="text-muted">YouTube Channel</dt>
-                    <dd>
-                      <a
-                        href={guitarist.youtube_channel_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-medium text-primary hover:text-primary-hover"
-                      >
-                        Visit Channel &rarr;
-                      </a>
-                    </dd>
-                  </div>
-                )}
-                {guitarist.contact_email && (
-                  <div>
-                    <dt className="text-muted">Contact</dt>
-                    <dd>
-                      <a
-                        href={`mailto:${guitarist.contact_email}`}
-                        className="font-medium text-primary hover:text-primary-hover"
-                      >
-                        {guitarist.contact_email}
-                      </a>
-                    </dd>
-                  </div>
-                )}
-              </dl>
-            </div>
+              <h3 className="font-bold text-foreground">Connect</h3>
 
-            {/* Social Links */}
-            {socials && socials.length > 0 && (
-              <div className="rounded-xl border border-border p-6">
-                <h3 className="font-semibold text-foreground">Social Links</h3>
-                <ul className="mt-4 space-y-2">
+              {guitarist.location && (
+                <p className="mt-3 text-sm text-muted">
+                  <span className="mr-1.5">📍</span> {guitarist.location}
+                </p>
+              )}
+
+              {guitarist.youtube_channel_url && (
+                <a
+                  href={guitarist.youtube_channel_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-700"
+                >
+                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none">
+                    <path d="M8 5v14l11-7z" fill="currentColor" />
+                  </svg>
+                  YouTube Channel
+                </a>
+              )}
+
+              {guitarist.contact_email && (
+                <a
+                  href={`mailto:${guitarist.contact_email}`}
+                  className="mt-2 flex w-full items-center justify-center rounded-full border border-border px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-surface"
+                >
+                  Send Email
+                </a>
+              )}
+
+              {/* Social Links */}
+              {socials && socials.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-2">
                   {socials.map((social) => (
-                    <li key={social.id}>
-                      <a
-                        href={social.external_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-sm text-muted hover:text-primary"
-                      >
-                        <span className="font-medium">
-                          {platformIcons[social.platform]}
-                        </span>
-                      </a>
-                    </li>
+                    <a
+                      key={social.id}
+                      href={social.external_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-full bg-surface px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-gray-200 hover:text-foreground"
+                    >
+                      {platformIcons[social.platform]}
+                    </a>
                   ))}
-                </ul>
-              </div>
+                </div>
+              )}
+            </div>
             )}
           </aside>
         </div>
