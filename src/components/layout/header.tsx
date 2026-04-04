@@ -19,8 +19,8 @@ export function Header() {
           <Image
             src="/logo-opm-fingerstyle.png"
             alt="OPM Fingerstyle"
-            width={40}
-            height={40}
+            width={48}
+            height={48}
             className="rounded-full"
           />
           <span className="text-xl font-bold tracking-tight text-foreground">

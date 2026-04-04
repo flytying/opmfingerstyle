@@ -11,7 +11,7 @@ export default function Home() {
       />
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gray-900">
-        <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-40">
+        <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
           <div className="flex flex-col items-center gap-10 lg:flex-row lg:gap-16">
             <div className="max-w-2xl flex-1">
               <p className="text-sm font-medium uppercase tracking-wider text-amber-300">
