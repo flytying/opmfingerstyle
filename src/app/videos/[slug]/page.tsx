@@ -85,7 +85,7 @@ export default async function VideoDetailPage({ params }: Props) {
     const vTitle = videoTitle.toLowerCase();
     return tabTitle.includes(vTitle) || vTitle.includes(tabTitle) ||
       (tab.song_name && vTitle.includes(tab.song_name.toLowerCase()));
-  }) || allTabs?.[0] || null; // fallback to first tab if no match
+  }) || null;
 
   const jsonLd = {
     "@context": "https://schema.org",
