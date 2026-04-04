@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { websiteJsonLd } from "@/lib/structured-data";
 
 export default function Home() {
@@ -9,36 +10,47 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
       />
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gray-900">
-        <div className="absolute inset-0 bg-[url('/hero-bg.jpg')] bg-cover bg-center opacity-30" />
-        <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-40">
-          <div className="max-w-2xl">
-            <p className="text-sm font-medium uppercase tracking-wider text-amber-300">
-              The Home of Filipino Fingerstyle
-            </p>
-            <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Discover OPM
-              <br />
-              Fingerstyle Guitarists
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-300">
-              Explore talented Filipino fingerstyle guitarists performing
-              Original Pilipino Music. Watch performances, find tabs, and
-              connect with the community.
-            </p>
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              <Link
-                href="/guitarists"
-                className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
-              >
-                Browse Guitarists
-              </Link>
-              <Link
-                href="/submit"
-                className="inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10"
-              >
-                Submit Your Profile
-              </Link>
+      <section className="relative overflow-hidden bg-amber-500">
+        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+          <div className="flex flex-col items-center gap-8 lg:flex-row lg:gap-16">
+            <div className="flex-1 text-center lg:text-left">
+              <p className="text-sm font-medium uppercase tracking-wider text-amber-900">
+                The Home of Filipino Fingerstyle
+              </p>
+              <h1 className="mt-4 text-4xl font-bold tracking-tight text-amber-950 sm:text-5xl lg:text-6xl">
+                Discover OPM
+                <br />
+                Fingerstyle Guitarists
+              </h1>
+              <p className="mt-6 text-lg leading-8 text-amber-900">
+                Explore talented Filipino fingerstyle guitarists performing
+                Original Pilipino Music. Watch performances, find tabs, and
+                connect with the community.
+              </p>
+              <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">
+                <Link
+                  href="/guitarists"
+                  className="inline-flex items-center justify-center rounded-full bg-amber-950 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-amber-900"
+                >
+                  Browse Guitarists
+                </Link>
+                <Link
+                  href="/submit"
+                  className="inline-flex items-center justify-center rounded-full border-2 border-amber-950 px-6 py-3 text-sm font-medium text-amber-950 transition-colors hover:bg-amber-950 hover:text-white"
+                >
+                  Submit Your Profile
+                </Link>
+              </div>
+            </div>
+            <div className="shrink-0">
+              <Image
+                src="/hero.png"
+                alt="OPM Fingerstyle — Carabao playing guitar"
+                width={400}
+                height={400}
+                priority
+                className="h-64 w-64 object-contain sm:h-80 sm:w-80 lg:h-96 lg:w-96"
+              />
             </div>
           </div>
         </div>
