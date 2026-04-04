@@ -43,6 +43,29 @@ export async function addVideo(guitaristId: string, formData: FormData) {
   return { success: true };
 }
 
+export async function updateVideo(videoId: string, formData: FormData) {
+  const supabase = await createClient();
+  const title = (formData.get("title") as string) || null;
+  const youtube_url = formData.get("youtube_url") as string;
+  const description = (formData.get("description") as string) || null;
+
+  const slug = title ? `${slugify(title)}-${videoId.substring(0, 8)}` : undefined;
+
+  const { error } = await supabase.from("guitarist_videos").update({
+    title,
+    youtube_url,
+    description,
+    ...(slug && { slug }),
+  }).eq("id", videoId);
+
+  if (error) {
+    console.error("Update video failed:", error);
+    return { success: false, error: "Failed to update video." };
+  }
+
+  return { success: true };
+}
+
 export async function removeVideo(videoId: string) {
   const supabase = await createClient();
   await supabase.from("guitarist_videos").delete().eq("id", videoId);

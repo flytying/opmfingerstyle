@@ -25,6 +25,24 @@ export async function addTab(guitaristId: string, formData: FormData) {
   return { success: true };
 }
 
+export async function updateTab(tabId: string, formData: FormData) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.from("tablature_links").update({
+    title: formData.get("title") as string,
+    song_name: (formData.get("song_name") as string) || null,
+    source_label: (formData.get("source_label") as string) || null,
+    external_url: formData.get("external_url") as string,
+  }).eq("id", tabId);
+
+  if (error) {
+    console.error("Update tab failed:", error);
+    return { success: false, error: "Failed to update tab." };
+  }
+
+  return { success: true };
+}
+
 export async function removeTab(tabId: string) {
   const supabase = await createClient();
   await supabase.from("tablature_links").delete().eq("id", tabId);
