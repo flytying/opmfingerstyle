@@ -11,31 +11,21 @@ export default function AboutPage() {
   return (
     <>
       {/* Hero banner */}
-      <section className="relative overflow-hidden bg-gray-900">
-        <div className="absolute inset-0">
-          <Image
-            src="/hero-background.png"
-            alt=""
-            fill
-            className="object-cover opacity-30"
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 to-gray-900/40" />
-        </div>
-        <div className="relative mx-auto flex max-w-7xl flex-col items-center px-4 py-16 text-center sm:px-6 sm:py-20 lg:px-8">
+      <section className="bg-primary">
+        <div className="mx-auto flex max-w-7xl flex-col items-center px-4 pt-12 text-center sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
             About OPM Fingerstyle
           </h1>
-          <p className="mt-4 max-w-xl text-lg text-gray-300">
+          <p className="mt-4 max-w-xl text-lg text-white/80">
             The home of Filipino fingerstyle guitar — celebrating OPM one
             arrangement at a time.
           </p>
           <Image
-            src="/hero.png"
+            src="/about-hero.png"
             alt="OPM Fingerstyle mascot — Carabao playing guitar"
-            width={180}
-            height={180}
-            className="mt-8 rounded-2xl"
+            width={320}
+            height={320}
+            className="mt-8 object-contain"
           />
         </div>
       </section>
