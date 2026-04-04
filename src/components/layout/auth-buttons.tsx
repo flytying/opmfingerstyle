@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { MobileMenu } from "./mobile-menu";
+import { UserMenu } from "./user-menu";
 
 interface Props {
   navLinks: { href: string; label: string }[];
@@ -11,13 +12,15 @@ export async function AuthButtons({ navLinks }: Props) {
   const { data: { user } } = await supabase.auth.getUser();
 
   let role: string | null = null;
+  let displayName: string | null = null;
   if (user) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("role")
+      .select("role, display_name")
       .eq("id", user.id)
       .single();
     role = profile?.role ?? null;
+    displayName = profile?.display_name ?? null;
   }
 
   return (
@@ -31,12 +34,13 @@ export async function AuthButtons({ navLinks }: Props) {
         </Link>
       )}
       {user ? (
-        <Link
-          href={role === "admin" ? "/admin" : "/dashboard"}
-          className="hidden rounded-full border border-border px-4 py-2 text-sm font-medium text-muted transition-colors hover:border-foreground hover:text-foreground sm:inline-flex"
-        >
-          {role === "admin" ? "Admin" : "Dashboard"}
-        </Link>
+        <div className="hidden sm:block">
+          <UserMenu
+            email={user.email || ""}
+            displayName={displayName}
+            role={role || "guitarist"}
+          />
+        </div>
       ) : (
         <Link
           href="/login"

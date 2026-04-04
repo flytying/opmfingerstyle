@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 interface MobileMenuProps {
   navLinks: { href: string; label: string }[];
@@ -11,6 +13,15 @@ interface MobileMenuProps {
 
 export function MobileMenu({ navLinks, user, role }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+
+  async function handleLogout() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    setOpen(false);
+    router.push("/");
+    router.refresh();
+  }
 
   return (
     <div className="md:hidden">
@@ -45,13 +56,21 @@ export function MobileMenu({ navLinks, user, role }: MobileMenuProps) {
             ))}
             <hr className="my-2 border-border" />
             {user ? (
-              <Link
-                href={role === "admin" ? "/admin" : "/dashboard"}
-                onClick={() => setOpen(false)}
-                className="block rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-surface hover:text-foreground"
-              >
-                {role === "admin" ? "Admin Panel" : "Dashboard"}
-              </Link>
+              <>
+                <Link
+                  href={role === "admin" ? "/admin" : "/dashboard"}
+                  onClick={() => setOpen(false)}
+                  className="block rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-surface hover:text-foreground"
+                >
+                  {role === "admin" ? "Admin Panel" : "Dashboard"}
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="block w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-red-600 transition-colors hover:bg-surface"
+                >
+                  Log Out
+                </button>
+              </>
             ) : (
               <Link
                 href="/login"
