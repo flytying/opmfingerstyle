@@ -50,10 +50,20 @@ export function VideosManager({ guitaristId, videos }: { guitaristId: string; vi
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-foreground">Title</label>
+            <label className="block text-sm font-medium text-foreground">Title *</label>
             <input
               name="title"
-              placeholder="Song title or description"
+              required
+              placeholder="e.g. Narda - Kamikazee Fingerstyle Cover"
+              className="mt-1 block w-full rounded-lg border border-border px-3 py-2 text-sm"
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-medium text-foreground">Description</label>
+            <textarea
+              name="description"
+              rows={3}
+              placeholder="Describe the arrangement, technique, and song..."
               className="mt-1 block w-full rounded-lg border border-border px-3 py-2 text-sm"
             />
           </div>

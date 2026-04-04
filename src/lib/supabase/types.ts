@@ -96,6 +96,7 @@ export interface Database {
           youtube_url: string;
           title: string | null;
           slug: string | null;
+          description: string | null;
           thumbnail_url: string | null;
           featured_order: number;
           created_at: string;
@@ -106,6 +107,7 @@ export interface Database {
           youtube_url: string;
           title?: string | null;
           slug?: string | null;
+          description?: string | null;
           thumbnail_url?: string | null;
           featured_order?: number;
           created_at?: string;
@@ -116,6 +118,7 @@ export interface Database {
           youtube_url?: string;
           title?: string | null;
           slug?: string | null;
+          description?: string | null;
           thumbnail_url?: string | null;
           featured_order?: number;
           created_at?: string;

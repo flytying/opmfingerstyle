@@ -7,18 +7,18 @@ export async function addVideo(guitaristId: string, formData: FormData) {
   const supabase = await createClient();
   const youtube_url = formData.get("youtube_url") as string;
   const title = (formData.get("title") as string) || null;
+  const description = (formData.get("description") as string) || null;
 
-  if (!youtube_url) return { success: false, error: "YouTube URL is required." };
+  if (!youtube_url || !title) return { success: false, error: "YouTube URL and title are required." };
 
-  const slug = title
-    ? `${slugify(title)}-${Date.now().toString(36)}`
-    : `video-${Date.now().toString(36)}`;
+  const slug = `${slugify(title)}-${Date.now().toString(36)}`;
 
   const { error } = await supabase.from("guitarist_videos").insert({
     guitarist_id: guitaristId,
     youtube_url,
     title,
     slug,
+    description,
   });
 
   if (error) {

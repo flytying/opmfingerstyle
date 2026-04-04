@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const { data: video } = await supabase
     .from("guitarist_videos")
-    .select("title, youtube_url, guitarists!inner(display_name, approval_status)")
+    .select("title, description, youtube_url, guitarists!inner(display_name, approval_status)")
     .eq("slug", slug)
     .single();
 
@@ -23,10 +23,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const g = video.guitarists as { display_name: string; approval_status: string } | null;
   const videoTitle = video.title || "Fingerstyle Guitar Cover";
+  const metaDesc = video.description
+    ? video.description.substring(0, 155)
+    : `Watch ${videoTitle} by ${g?.display_name || "a Filipino fingerstyle guitarist"}. OPM fingerstyle guitar cover with tabs available.`;
 
   return {
     title: `${videoTitle} — ${g?.display_name || "OPM Fingerstyle"}`,
-    description: `Watch ${videoTitle} by ${g?.display_name || "a Filipino fingerstyle guitarist"}. OPM fingerstyle guitar cover with tabs available.`,
+    description: metaDesc,
     openGraph: {
       title: `${videoTitle} | OPM Fingerstyle`,
       description: `Watch ${videoTitle} by ${g?.display_name}`,
@@ -157,6 +160,15 @@ export default async function VideoDetailPage({ params }: Props) {
                 <p className="text-sm text-muted">Fingerstyle Guitarist</p>
               </div>
             </div>
+
+            {/* Description */}
+            {video.description && (
+              <div className="mt-6 text-muted leading-relaxed">
+                {video.description.split("\n").map((paragraph, i) => (
+                  <p key={i} className={i > 0 ? "mt-3" : ""}>{paragraph}</p>
+                ))}
+              </div>
+            )}
 
             {/* Action buttons */}
             <div className="mt-6 flex flex-wrap gap-3">
