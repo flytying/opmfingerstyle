@@ -1,8 +1,39 @@
 import Link from "next/link";
 import Image from "next/image";
 import { websiteJsonLd } from "@/lib/structured-data";
+import { createClient } from "@/lib/supabase/server";
+import { GuitaristCard } from "@/components/ui/guitarist-card";
+import { VideoCard } from "@/components/ui/video-card";
+import { ArticleCard } from "@/components/ui/article-card";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+
+  // Fetch data in parallel
+  const [{ data: guitarists }, { data: videos }, { data: articles }] = await Promise.all([
+    supabase
+      .from("guitarists")
+      .select("slug, display_name, location, bio_short, profile_photo_url")
+      .eq("approval_status", "approved")
+      .order("featured", { ascending: false })
+      .limit(4),
+    supabase
+      .from("guitarist_videos")
+      .select("id, slug, youtube_url, title, thumbnail_url, guitarists!inner(slug, display_name, approval_status)")
+      .order("created_at", { ascending: false })
+      .limit(6),
+    supabase
+      .from("articles")
+      .select("slug, title, excerpt, featured_image_url, published_at")
+      .eq("status", "published")
+      .order("published_at", { ascending: false })
+      .limit(3),
+  ]);
+
+  const approvedVideos = videos?.filter(
+    (v) => (v.guitarists as { approval_status: string } | null)?.approval_status === "approved"
+  ).slice(0, 3);
+
   return (
     <>
       <script
@@ -56,59 +87,70 @@ export default function Home() {
       </section>
 
       {/* Featured Guitarists */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight text-foreground">
-              Featured Guitarists
-            </h2>
-            <p className="mt-2 text-muted">
-              Meet the talented artists behind the music.
-            </p>
-          </div>
-          <Link
-            href="/guitarists"
-            className="hidden text-sm font-medium text-primary hover:text-primary-hover sm:block"
-          >
-            View all &rarr;
-          </Link>
-        </div>
-
-        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Placeholder cards — will be replaced with dynamic data */}
-          {[1, 2, 3, 4].map((i) => (
-            <GuitaristCardPlaceholder key={i} />
-          ))}
-        </div>
-      </section>
-
-      {/* Latest Videos */}
-      <section className="bg-surface">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      {guitarists && guitarists.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between">
             <div>
               <h2 className="text-3xl font-bold tracking-tight text-foreground">
-                Latest Videos
+                Featured Guitarists
               </h2>
               <p className="mt-2 text-muted">
-                Watch the latest OPM fingerstyle performances.
+                Meet the talented artists behind the music.
               </p>
             </div>
             <Link
-              href="/videos"
+              href="/guitarists"
               className="hidden text-sm font-medium text-primary hover:text-primary-hover sm:block"
             >
               View all &rarr;
             </Link>
           </div>
 
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((i) => (
-              <VideoCardPlaceholder key={i} />
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {guitarists.map((guitarist) => (
+              <GuitaristCard key={guitarist.slug} guitarist={guitarist} />
             ))}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* Latest Videos */}
+      {approvedVideos && approvedVideos.length > 0 && (
+        <section className="bg-surface">
+          <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+            <div className="flex items-end justify-between">
+              <div>
+                <h2 className="text-3xl font-bold tracking-tight text-foreground">
+                  Latest Videos
+                </h2>
+                <p className="mt-2 text-muted">
+                  Watch the latest OPM fingerstyle performances.
+                </p>
+              </div>
+              <Link
+                href="/videos"
+                className="hidden text-sm font-medium text-primary hover:text-primary-hover sm:block"
+              >
+                View all &rarr;
+              </Link>
+            </div>
+
+            <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {approvedVideos.map((video) => {
+                const g = video.guitarists as { slug: string; display_name: string } | null;
+                return (
+                  <VideoCard
+                    key={video.id}
+                    video={video}
+                    guitaristName={g?.display_name}
+                    guitaristSlug={g?.slug}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CTA Section */}
       <section className="bg-gray-900">
@@ -132,69 +174,32 @@ export default function Home() {
       </section>
 
       {/* Latest Articles */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight text-foreground">
-              From the Blog
-            </h2>
-            <p className="mt-2 text-muted">
-              Guides, gear reviews, and stories from the community.
-            </p>
+      {articles && articles.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <div className="flex items-end justify-between">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight text-foreground">
+                From the Blog
+              </h2>
+              <p className="mt-2 text-muted">
+                Guides, gear reviews, and stories from the community.
+              </p>
+            </div>
+            <Link
+              href="/blog"
+              className="hidden text-sm font-medium text-primary hover:text-primary-hover sm:block"
+            >
+              View all &rarr;
+            </Link>
           </div>
-          <Link
-            href="/blog"
-            className="hidden text-sm font-medium text-primary hover:text-primary-hover sm:block"
-          >
-            View all &rarr;
-          </Link>
-        </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {[1, 2, 3].map((i) => (
-            <ArticleCardPlaceholder key={i} />
-          ))}
-        </div>
-      </section>
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {articles.map((article) => (
+              <ArticleCard key={article.slug} article={article} />
+            ))}
+          </div>
+        </section>
+      )}
     </>
-  );
-}
-
-function GuitaristCardPlaceholder() {
-  return (
-    <div className="group overflow-hidden rounded-xl border border-border bg-background transition-shadow hover:shadow-lg">
-      <div className="aspect-square bg-gray-200" />
-      <div className="p-4">
-        <div className="h-5 w-32 rounded bg-gray-200" />
-        <div className="mt-2 h-4 w-24 rounded bg-gray-100" />
-        <div className="mt-3 h-3 w-full rounded bg-gray-100" />
-      </div>
-    </div>
-  );
-}
-
-function VideoCardPlaceholder() {
-  return (
-    <div className="group overflow-hidden rounded-xl border border-border bg-background transition-shadow hover:shadow-lg">
-      <div className="aspect-video bg-gray-200" />
-      <div className="p-4">
-        <div className="h-4 w-48 rounded bg-gray-200" />
-        <div className="mt-2 h-3 w-32 rounded bg-gray-100" />
-      </div>
-    </div>
-  );
-}
-
-function ArticleCardPlaceholder() {
-  return (
-    <div className="group overflow-hidden rounded-xl border border-border bg-background transition-shadow hover:shadow-lg">
-      <div className="aspect-[16/9] bg-gray-200" />
-      <div className="p-4">
-        <div className="h-3 w-16 rounded bg-amber-100" />
-        <div className="mt-2 h-5 w-full rounded bg-gray-200" />
-        <div className="mt-2 h-3 w-full rounded bg-gray-100" />
-        <div className="mt-1 h-3 w-3/4 rounded bg-gray-100" />
-      </div>
-    </div>
   );
 }
