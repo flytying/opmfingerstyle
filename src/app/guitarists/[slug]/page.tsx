@@ -253,7 +253,6 @@ export default async function GuitaristProfilePage({ params }: Props) {
                 </div>
               )}
             </div>
-            )}
           </aside>
         </div>
       </div>
