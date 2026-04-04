@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { websiteJsonLd } from "@/lib/structured-data";
 import { createClient } from "@/lib/supabase/server";
 import { GuitaristCard } from "@/components/ui/guitarist-card";
@@ -43,14 +42,13 @@ export default async function Home() {
       {/* Hero Section */}
       <section className="relative min-h-[400px] overflow-hidden bg-gray-900">
         <div className="absolute inset-0">
-          <Image
-            src="/hero-background.png"
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/hero-background.jpg"
             alt=""
-            fill
-            priority
-            className="object-cover opacity-40"
-            sizes="100vw"
-            quality={75}
+            fetchPriority="high"
+            decoding="sync"
+            className="absolute inset-0 h-full w-full object-cover opacity-40"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 to-gray-900/40" />
         </div>
