@@ -11,28 +11,54 @@ export default function AuthConfirmPage() {
   useEffect(() => {
     const supabase = createClient();
 
-    // Supabase redirects here with tokens in the hash fragment
-    // The Supabase client auto-detects and establishes the session
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_IN" || event === "PASSWORD_RECOVERY") {
-        // Session established — redirect to set password
-        router.replace("/auth/set-password");
-      }
-    });
+    async function handleAuth() {
+      // Parse hash fragment manually
+      const hash = window.location.hash.substring(1);
+      if (hash) {
+        const params = new URLSearchParams(hash);
+        const accessToken = params.get("access_token");
+        const refreshToken = params.get("refresh_token");
 
-    // Also check if session is already set (in case event already fired)
-    supabase.auth.getSession().then(({ data: { session } }) => {
+        if (accessToken && refreshToken) {
+          const { error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+
+          if (!error) {
+            // Clear the hash from URL before redirecting
+            window.history.replaceState(null, "", "/auth/confirm");
+            router.replace("/auth/set-password");
+            return;
+          }
+          console.error("Set session failed:", error.message);
+        }
+      }
+
+      // Check query params for code (PKCE flow)
+      const url = new URL(window.location.href);
+      const code = url.searchParams.get("code");
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (!error) {
+          router.replace("/auth/set-password");
+          return;
+        }
+        console.error("Code exchange failed:", error.message);
+      }
+
+      // Check if session already exists
+      const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         router.replace("/auth/set-password");
+        return;
       }
-    });
 
-    // Fallback timeout
-    const timeout = setTimeout(() => {
-      setError(true);
-    }, 15000);
+      // Nothing worked — show error after delay
+      setTimeout(() => setError(true), 5000);
+    }
 
-    return () => clearTimeout(timeout);
+    handleAuth();
   }, [router]);
 
   if (error) {
