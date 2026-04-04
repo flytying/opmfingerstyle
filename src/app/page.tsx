@@ -10,11 +10,11 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
       />
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-amber-500">
-        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
-          <div className="flex flex-col items-center gap-8 lg:flex-row lg:gap-16">
-            <div className="flex-1 text-center lg:text-left">
-              <p className="text-sm font-medium uppercase tracking-wider text-amber-900">
+      <section className="relative overflow-hidden" style={{ backgroundColor: "#C8920E" }}>
+        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
+          <div className="flex flex-col items-center gap-10 lg:flex-row lg:gap-16">
+            <div className="max-w-2xl flex-1">
+              <p className="text-sm font-medium uppercase tracking-wider text-amber-950/70">
                 The Home of Filipino Fingerstyle
               </p>
               <h1 className="mt-4 text-4xl font-bold tracking-tight text-amber-950 sm:text-5xl lg:text-6xl">
@@ -22,12 +22,12 @@ export default function Home() {
                 <br />
                 Fingerstyle Guitarists
               </h1>
-              <p className="mt-6 text-lg leading-8 text-amber-900">
+              <p className="mt-6 text-lg leading-8 text-amber-950/80">
                 Explore talented Filipino fingerstyle guitarists performing
                 Original Pilipino Music. Watch performances, find tabs, and
                 connect with the community.
               </p>
-              <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">
+              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                 <Link
                   href="/guitarists"
                   className="inline-flex items-center justify-center rounded-full bg-amber-950 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-amber-900"
@@ -42,14 +42,14 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-            <div className="shrink-0">
+            <div className="hidden shrink-0 lg:block">
               <Image
                 src="/hero.png"
                 alt="OPM Fingerstyle — Carabao playing guitar"
                 width={400}
                 height={400}
                 priority
-                className="h-64 w-64 object-contain sm:h-80 sm:w-80 lg:h-96 lg:w-96"
+                className="h-80 w-80 object-contain xl:h-96 xl:w-96"
               />
             </div>
           </div>
