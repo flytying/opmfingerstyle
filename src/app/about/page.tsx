@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -9,9 +10,24 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
-      <h1 className="text-4xl font-bold tracking-tight text-foreground">
-        About OPM Fingerstyle
-      </h1>
+      <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
+        <Image
+          src="/hero.png"
+          alt="OPM Fingerstyle mascot — Carabao playing guitar"
+          width={160}
+          height={160}
+          className="shrink-0 rounded-2xl"
+        />
+        <div>
+          <h1 className="text-4xl font-bold tracking-tight text-foreground">
+            About OPM Fingerstyle
+          </h1>
+          <p className="mt-3 text-lg text-muted">
+            The home of Filipino fingerstyle guitar — celebrating OPM one
+            arrangement at a time.
+          </p>
+        </div>
+      </div>
 
       <div className="mt-8 space-y-6 text-lg leading-relaxed text-muted">
         <p>

@@ -11,46 +11,45 @@ export default function Home() {
       />
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gray-900">
-        <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-          <div className="flex flex-col items-center gap-10 lg:flex-row lg:gap-16">
-            <div className="max-w-2xl flex-1">
-              <p className="text-sm font-medium uppercase tracking-wider text-amber-300">
-                The Home of Filipino Fingerstyle
-              </p>
-              <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Discover OPM
-                <br />
-                Fingerstyle Guitarists
-              </h1>
-              <p className="mt-6 text-lg leading-8 text-gray-300">
-                Explore talented Filipino fingerstyle guitarists performing
-                Original Pilipino Music. Watch performances, find tabs, and
-                connect with the community.
-              </p>
-              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                <Link
-                  href="/guitarists"
-                  className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
-                >
-                  Browse Guitarists
-                </Link>
-                <Link
-                  href="/submit"
-                  className="inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10"
-                >
-                  Submit Your Profile
-                </Link>
-              </div>
-            </div>
-            <div className="hidden shrink-0 lg:block">
-              <Image
-                src="/hero.png"
-                alt="OPM Fingerstyle — Carabao playing guitar"
-                width={400}
-                height={400}
-                priority
-                className="h-80 w-80 rounded-2xl object-contain xl:h-96 xl:w-96"
-              />
+        <div className="absolute inset-0">
+          <Image
+            src="/hero-background.png"
+            alt=""
+            fill
+            priority
+            className="object-cover opacity-40"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 to-gray-900/40" />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+          <div className="max-w-2xl">
+            <p className="text-sm font-medium uppercase tracking-wider text-amber-300">
+              The Home of Filipino Fingerstyle
+            </p>
+            <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+              Discover OPM
+              <br />
+              Fingerstyle Guitarists
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-gray-300">
+              Explore talented Filipino fingerstyle guitarists performing
+              Original Pilipino Music. Watch performances, find tabs, and
+              connect with the community.
+            </p>
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+              <Link
+                href="/guitarists"
+                className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
+              >
+                Browse Guitarists
+              </Link>
+              <Link
+                href="/submit"
+                className="inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10"
+              >
+                Submit Your Profile
+              </Link>
             </div>
           </div>
         </div>
