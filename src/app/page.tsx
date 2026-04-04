@@ -10,19 +10,19 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
       />
       {/* Hero Section */}
-      <section className="relative overflow-hidden" style={{ backgroundColor: "#C8920E" }}>
-        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
+      <section className="relative overflow-hidden bg-gray-900">
+        <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-40">
           <div className="flex flex-col items-center gap-10 lg:flex-row lg:gap-16">
             <div className="max-w-2xl flex-1">
-              <p className="text-sm font-medium uppercase tracking-wider text-amber-950/70">
+              <p className="text-sm font-medium uppercase tracking-wider text-amber-300">
                 The Home of Filipino Fingerstyle
               </p>
-              <h1 className="mt-4 text-4xl font-bold tracking-tight text-amber-950 sm:text-5xl lg:text-6xl">
+              <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Discover OPM
                 <br />
                 Fingerstyle Guitarists
               </h1>
-              <p className="mt-6 text-lg leading-8 text-amber-950/80">
+              <p className="mt-6 text-lg leading-8 text-gray-300">
                 Explore talented Filipino fingerstyle guitarists performing
                 Original Pilipino Music. Watch performances, find tabs, and
                 connect with the community.
@@ -30,13 +30,13 @@ export default function Home() {
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                 <Link
                   href="/guitarists"
-                  className="inline-flex items-center justify-center rounded-full bg-amber-950 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-amber-900"
+                  className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
                 >
                   Browse Guitarists
                 </Link>
                 <Link
                   href="/submit"
-                  className="inline-flex items-center justify-center rounded-full border-2 border-amber-950 px-6 py-3 text-sm font-medium text-amber-950 transition-colors hover:bg-amber-950 hover:text-white"
+                  className="inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10"
                 >
                   Submit Your Profile
                 </Link>
@@ -49,7 +49,7 @@ export default function Home() {
                 width={400}
                 height={400}
                 priority
-                className="h-80 w-80 object-contain xl:h-96 xl:w-96"
+                className="h-80 w-80 rounded-2xl object-contain xl:h-96 xl:w-96"
               />
             </div>
           </div>
