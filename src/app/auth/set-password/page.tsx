@@ -1,37 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-export default function AuthConfirmPage() {
+function SetPasswordForm() {
   const router = useRouter();
-  const [status, setStatus] = useState<"loading" | "set-password" | "error">("loading");
+  const searchParams = useSearchParams();
+  const hasError = searchParams.get("error") === "expired";
+
   const [password, setPassword] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [checking, setChecking] = useState(true);
+  const [hasSession, setHasSession] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
-
-    // Supabase auto-detects the hash fragment and sets the session
-    supabase.auth.onAuthStateChange((event) => {
-      if (event === "SIGNED_IN" || event === "PASSWORD_RECOVERY") {
-        setStatus("set-password");
-      }
-    });
-
-    // Also check if already signed in
     supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) setStatus("set-password");
+      setHasSession(!!user);
+      setChecking(false);
     });
-
-    // Timeout fallback
-    const timeout = setTimeout(() => {
-      setStatus((prev) => (prev === "loading" ? "error" : prev));
-    }, 60 * 60 * 1000); // 60 minutes
-
-    return () => clearTimeout(timeout);
   }, []);
 
   async function handleSetPassword(e: React.FormEvent) {
@@ -57,24 +47,24 @@ export default function AuthConfirmPage() {
     router.refresh();
   }
 
-  if (status === "loading") {
+  if (checking) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="text-center">
           <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-primary" />
-          <p className="mt-4 text-muted">Verifying your invite...</p>
+          <p className="mt-4 text-muted">Setting up your account...</p>
         </div>
       </div>
     );
   }
 
-  if (status === "error") {
+  if (hasError || !hasSession) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center px-4">
         <div className="w-full max-w-sm text-center">
           <p className="text-2xl font-bold text-foreground">Link Expired</p>
           <p className="mt-2 text-muted">
-            This invite link may have expired. Please contact us to get a new one.
+            This invite link has expired or has already been used. Please contact us to get a new one.
           </p>
         </div>
       </div>
@@ -124,5 +114,17 @@ export default function AuthConfirmPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function SetPasswordPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-primary" />
+      </div>
+    }>
+      <SetPasswordForm />
+    </Suspense>
   );
 }
