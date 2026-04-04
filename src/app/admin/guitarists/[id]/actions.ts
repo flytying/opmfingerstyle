@@ -144,3 +144,35 @@ export async function resendInvite(id: string) {
 
   return { success: true };
 }
+
+export async function disableGuitarist(id: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("guitarists")
+    .update({ approval_status: "rejected" as const })
+    .eq("id", id);
+
+  if (error) {
+    console.error("Disable failed:", error);
+    return { success: false, error: "Failed to disable guitarist." };
+  }
+
+  return { success: true };
+}
+
+export async function enableGuitarist(id: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("guitarists")
+    .update({ approval_status: "approved" as const })
+    .eq("id", id);
+
+  if (error) {
+    console.error("Enable failed:", error);
+    return { success: false, error: "Failed to enable guitarist." };
+  }
+
+  return { success: true };
+}

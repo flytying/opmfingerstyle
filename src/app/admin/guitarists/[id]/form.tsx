@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { approveGuitarist, rejectGuitarist, updateGuitarist, resendInvite } from "./actions";
+import { approveGuitarist, rejectGuitarist, updateGuitarist, resendInvite, disableGuitarist, enableGuitarist } from "./actions";
 import type { Guitarist, GuitaristVideo, TablatureLink, SocialLink } from "@/lib/supabase/types";
 
 interface Props {
@@ -108,6 +108,41 @@ export function GuitaristReviewForm({ guitarist, videos, tabs, socials }: Props)
             className="rounded-full bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary-hover disabled:opacity-50"
           >
             Resend Invite Email
+          </button>
+          <button
+            onClick={async () => {
+              if (!confirm("Disable this guitarist? Their profile will be hidden from the public site.")) return;
+              setSaving(true);
+              setMessage("");
+              const result = await disableGuitarist(guitarist.id);
+              setSaving(false);
+              setMessage(result.success ? "Guitarist disabled." : (result.error || "Failed."));
+              if (result.success) router.refresh();
+            }}
+            disabled={saving}
+            className="rounded-full border border-red-300 px-6 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+          >
+            Disable Account
+          </button>
+        </div>
+      )}
+
+      {guitarist.approval_status === "rejected" && (
+        <div className="flex gap-3">
+          <button
+            onClick={async () => {
+              if (!confirm("Re-enable this guitarist?")) return;
+              setSaving(true);
+              setMessage("");
+              const result = await enableGuitarist(guitarist.id);
+              setSaving(false);
+              setMessage(result.success ? "Guitarist re-enabled." : (result.error || "Failed."));
+              if (result.success) router.refresh();
+            }}
+            disabled={saving}
+            className="rounded-full bg-green-600 px-6 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
+          >
+            Re-enable Account
           </button>
         </div>
       )}
