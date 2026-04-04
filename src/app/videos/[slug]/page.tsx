@@ -76,7 +76,7 @@ export default async function VideoDetailPage({ params }: Props) {
       .eq("guitarist_id", g?.id || "")
       .neq("id", video.id)
       .order("featured_order")
-      .limit(4),
+      .limit(3),
   ]);
 
   // Match tab to this video by title similarity
