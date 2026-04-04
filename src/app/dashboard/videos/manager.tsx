@@ -67,6 +67,38 @@ export function VideosManager({ guitaristId, videos }: { guitaristId: string; vi
               className="mt-1 block w-full rounded-lg border border-border px-3 py-2 text-sm"
             />
           </div>
+
+          {/* Optional tab link */}
+          <div className="sm:col-span-2 rounded-lg border border-dashed border-border bg-surface p-4">
+            <p className="text-sm font-medium text-foreground">Guitar Tab (optional)</p>
+            <p className="mt-0.5 text-xs text-muted">Add a tab link for this song — it will also appear in your Tabs section.</p>
+            <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div>
+                <label className="block text-xs font-medium text-muted">Tab URL</label>
+                <input
+                  name="tab_url"
+                  placeholder="https://..."
+                  className="mt-1 block w-full rounded-lg border border-border px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-muted">Song Name</label>
+                <input
+                  name="tab_song_name"
+                  placeholder="e.g. Fill Her"
+                  className="mt-1 block w-full rounded-lg border border-border px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-muted">Source</label>
+                <input
+                  name="tab_source"
+                  placeholder="e.g. Ultimate Guitar, PDF"
+                  className="mt-1 block w-full rounded-lg border border-border px-3 py-2 text-sm"
+                />
+              </div>
+            </div>
+          </div>
         </div>
         <button
           type="submit"
