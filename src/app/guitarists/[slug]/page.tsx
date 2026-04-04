@@ -227,15 +227,6 @@ export default async function GuitaristProfilePage({ params }: Props) {
                 </a>
               )}
 
-              {guitarist.contact_email && (
-                <a
-                  href={`mailto:${guitarist.contact_email}`}
-                  className="mt-2 flex w-full items-center justify-center rounded-full border border-border px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-surface"
-                >
-                  Send Email
-                </a>
-              )}
-
               {/* Social Links */}
               {socials && socials.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-2">
