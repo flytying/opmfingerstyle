@@ -9,7 +9,6 @@ const dashNav = [
   { href: "/dashboard/videos", label: "Videos", icon: "video" },
   { href: "/dashboard/tabs", label: "Tabs", icon: "music" },
   { href: "/dashboard/socials", label: "Social Links", icon: "link" },
-  { href: "/dashboard/settings", label: "Settings", icon: "settings" },
 ];
 
 const icons: Record<string, React.ReactNode> = {

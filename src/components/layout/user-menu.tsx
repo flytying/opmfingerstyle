@@ -72,13 +72,22 @@ export function UserMenu({ email, displayName, role }: UserMenuProps) {
               </Link>
             )}
             {role !== "admin" && (
-              <Link
-                href="/dashboard/profile"
-                onClick={() => setOpen(false)}
-                className="block px-4 py-2 text-sm text-foreground hover:bg-surface"
-              >
-                Edit Profile
-              </Link>
+              <>
+                <Link
+                  href="/dashboard/profile"
+                  onClick={() => setOpen(false)}
+                  className="block px-4 py-2 text-sm text-foreground hover:bg-surface"
+                >
+                  Edit Profile
+                </Link>
+                <Link
+                  href="/dashboard/settings"
+                  onClick={() => setOpen(false)}
+                  className="block px-4 py-2 text-sm text-foreground hover:bg-surface"
+                >
+                  Settings
+                </Link>
+              </>
             )}
           </div>
 
