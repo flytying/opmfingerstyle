@@ -22,7 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         .eq("status", "published"),
       supabase
         .from("guitarist_videos")
-        .select("id, created_at"),
+        .select("id, slug, created_at"),
     ]);
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -59,7 +59,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const videoPages: MetadataRoute.Sitemap = (videos || []).map((v) => ({
-    url: `${BASE_URL}/videos/${v.id}`,
+    url: `${BASE_URL}/videos/${v.slug || v.id}`,
     lastModified: v.created_at,
     changeFrequency: "monthly" as const,
     priority: 0.7,

@@ -15,6 +15,7 @@ export default async function VideosPage() {
     .from("guitarist_videos")
     .select(`
       id,
+      slug,
       youtube_url,
       title,
       thumbnail_url,

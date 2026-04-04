@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getYouTubeId } from "@/lib/utils";
 
 interface Props {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = await params;
+  const { slug } = await params;
   const supabase = await createClient();
 
   const { data: video } = await supabase
     .from("guitarist_videos")
     .select("title, youtube_url, guitarists!inner(display_name, approval_status)")
-    .eq("id", id)
+    .eq("slug", slug)
     .single();
 
   if (!video) return { title: "Video Not Found" };
@@ -35,13 +36,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function VideoDetailPage({ params }: Props) {
-  const { id } = await params;
+  const { slug } = await params;
   const supabase = await createClient();
 
   const { data: video } = await supabase
     .from("guitarist_videos")
     .select("*, guitarists!inner(id, slug, display_name, youtube_channel_url, profile_photo_url, approval_status)")
-    .eq("id", id)
+    .eq("slug", slug)
     .single();
 
   if (!video) notFound();
@@ -59,24 +60,22 @@ export default async function VideoDetailPage({ params }: Props) {
 
   const youtubeId = getYouTubeId(video.youtube_url);
 
-  // Get related tabs from this guitarist
-  const { data: tabs } = await supabase
-    .from("tablature_links")
-    .select("id, title, song_name, external_url, source_label")
-    .eq("guitarist_id", g?.id || "")
-    .order("created_at", { ascending: false })
-    .limit(5);
+  const [{ data: tabs }, { data: moreVideos }] = await Promise.all([
+    supabase
+      .from("tablature_links")
+      .select("id, title, song_name, external_url, source_label")
+      .eq("guitarist_id", g?.id || "")
+      .order("created_at", { ascending: false })
+      .limit(5),
+    supabase
+      .from("guitarist_videos")
+      .select("id, title, slug, youtube_url")
+      .eq("guitarist_id", g?.id || "")
+      .neq("id", video.id)
+      .order("featured_order")
+      .limit(4),
+  ]);
 
-  // Get more videos from this guitarist (excluding current)
-  const { data: moreVideos } = await supabase
-    .from("guitarist_videos")
-    .select("id, title, youtube_url")
-    .eq("guitarist_id", g?.id || "")
-    .neq("id", id)
-    .order("featured_order")
-    .limit(4);
-
-  // JSON-LD for VideoObject
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "VideoObject",
@@ -102,9 +101,9 @@ export default async function VideoDetailPage({ params }: Props) {
 
       {/* Video Hero */}
       <section className="bg-gray-900">
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {youtubeId ? (
-            <div className="relative aspect-video">
+            <div className="relative aspect-video overflow-hidden rounded-b-xl">
               <iframe
                 src={`https://www.youtube.com/embed/${youtubeId}?rel=0`}
                 title={video.title || "Video"}
@@ -129,7 +128,7 @@ export default async function VideoDetailPage({ params }: Props) {
       </section>
 
       {/* Content */}
-      <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
           {/* Main content */}
           <div className="lg:col-span-2">
@@ -140,10 +139,12 @@ export default async function VideoDetailPage({ params }: Props) {
             {/* Artist info */}
             <div className="mt-4 flex items-center gap-3">
               {g?.profile_photo_url && (
-                <img
+                <Image
                   src={g.profile_photo_url}
                   alt={g.display_name}
-                  className="h-10 w-10 rounded-full object-cover"
+                  width={40}
+                  height={40}
+                  className="rounded-full object-cover"
                 />
               )}
               <div>
@@ -192,17 +193,20 @@ export default async function VideoDetailPage({ params }: Props) {
                 <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
                   {moreVideos.map((v) => {
                     const vId = getYouTubeId(v.youtube_url);
+                    const vHref = v.slug ? `/videos/${v.slug}` : `/videos/${v.id}`;
                     return (
                       <Link
                         key={v.id}
-                        href={`/videos/${v.id}`}
+                        href={vHref}
                         className="group flex gap-3 rounded-lg border border-border p-3 transition-colors hover:border-primary hover:bg-primary-light"
                       >
                         {vId && (
-                          <img
+                          <Image
                             src={`https://img.youtube.com/vi/${vId}/mqdefault.jpg`}
                             alt={v.title || "Video"}
-                            className="h-16 w-28 shrink-0 rounded object-cover"
+                            width={112}
+                            height={64}
+                            className="shrink-0 rounded object-cover"
                           />
                         )}
                         <p className="line-clamp-2 text-sm font-medium text-foreground group-hover:text-primary">
@@ -221,9 +225,7 @@ export default async function VideoDetailPage({ params }: Props) {
             {/* Tabs download */}
             {tabs && tabs.length > 0 && (
               <div className="rounded-xl border border-border bg-surface p-6">
-                <h2 className="font-bold text-foreground">
-                  Guitar Tabs
-                </h2>
+                <h2 className="font-bold text-foreground">Guitar Tabs</h2>
                 <p className="mt-1 text-sm text-muted">
                   Learn to play this arrangement with accurate tablature.
                 </p>
@@ -255,10 +257,12 @@ export default async function VideoDetailPage({ params }: Props) {
                   className="flex items-center gap-3 hover:opacity-80"
                 >
                   {g?.profile_photo_url && (
-                    <img
+                    <Image
                       src={g.profile_photo_url}
                       alt={g.display_name}
-                      className="h-12 w-12 rounded-full object-cover"
+                      width={48}
+                      height={48}
+                      className="rounded-full object-cover"
                     />
                   )}
                   <div>

@@ -5,6 +5,7 @@ import { getYouTubeThumbnail } from "@/lib/utils";
 interface VideoCardProps {
   video: {
     id?: string;
+    slug?: string | null;
     youtube_url: string;
     title: string | null;
     thumbnail_url: string | null;
@@ -15,8 +16,9 @@ interface VideoCardProps {
 
 export function VideoCard({ video, guitaristName, guitaristSlug }: VideoCardProps) {
   const thumbnail = video.thumbnail_url || getYouTubeThumbnail(video.youtube_url);
-  const href = video.id ? `/videos/${video.id}` : video.youtube_url;
-  const isInternal = !!video.id;
+  const videoSlug = video.slug || video.id;
+  const href = videoSlug ? `/videos/${videoSlug}` : video.youtube_url;
+  const isInternal = !!videoSlug;
 
   const linkProps = isInternal
     ? {}
