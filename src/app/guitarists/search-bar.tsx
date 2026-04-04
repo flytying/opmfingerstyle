@@ -42,7 +42,7 @@ export function SearchBar() {
         value={query}
         onChange={(e) => handleSearch(e.target.value)}
         placeholder="Search by name or location..."
-        className="w-full rounded-lg border border-border bg-background py-2.5 pl-10 pr-4 text-sm text-foreground placeholder:text-gray-400 focus:border-primary focus:ring-1 focus:ring-primary"
+        className="w-full rounded-lg border border-gray-300 bg-background py-2.5 pl-10 pr-4 text-sm text-foreground placeholder:text-gray-400 focus:border-primary focus:ring-1 focus:ring-primary"
       />
       {isPending && (
         <div className="absolute right-3 top-1/2 -translate-y-1/2">

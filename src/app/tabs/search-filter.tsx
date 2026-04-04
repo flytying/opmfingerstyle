@@ -40,7 +40,7 @@ export function TabSearchFilter({ artists }: Props) {
           value={query}
           onChange={(e) => { setQuery(e.target.value); updateParams(e.target.value, currentArtist); }}
           placeholder="Search tabs by title or song..."
-          className="w-full rounded-lg border border-border bg-background py-2.5 pl-10 pr-4 text-sm text-foreground placeholder:text-gray-400 focus:border-primary focus:ring-1 focus:ring-primary"
+          className="w-full rounded-lg border border-gray-300 bg-background py-2.5 pl-10 pr-4 text-sm text-foreground placeholder:text-gray-400 focus:border-primary focus:ring-1 focus:ring-primary"
         />
         {isPending && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -51,7 +51,7 @@ export function TabSearchFilter({ artists }: Props) {
       <select
         value={currentArtist}
         onChange={(e) => updateParams(query, e.target.value)}
-        className="rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground focus:border-primary focus:ring-1 focus:ring-primary"
+        className="rounded-lg border border-gray-300 bg-background px-4 py-2.5 text-sm text-foreground focus:border-primary focus:ring-1 focus:ring-primary"
       >
         <option value="">All Artists</option>
         {artists.map((a) => (
