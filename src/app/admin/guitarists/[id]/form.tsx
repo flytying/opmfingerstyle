@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { approveGuitarist, rejectGuitarist, updateGuitarist } from "./actions";
+import { approveGuitarist, rejectGuitarist, updateGuitarist, resendInvite } from "./actions";
 import type { Guitarist, GuitaristVideo, TablatureLink, SocialLink } from "@/lib/supabase/types";
 
 interface Props {
@@ -57,11 +57,25 @@ export function GuitaristReviewForm({ guitarist, videos, tabs, socials }: Props)
   }
 
   const isPending = guitarist.approval_status === "pending_review";
+  const isApproved = guitarist.approval_status === "approved";
+
+  async function handleResendInvite() {
+    if (!confirm("Resend invite email to this guitarist?")) return;
+    setSaving(true);
+    setMessage("");
+    const result = await resendInvite(guitarist.id);
+    setSaving(false);
+    if (result.success) {
+      setMessage("Invite resent successfully!");
+    } else {
+      setMessage(result.error || "Failed to resend invite.");
+    }
+  }
 
   return (
     <div className="mt-6 space-y-6">
       {message && (
-        <div className={`rounded-lg border p-3 text-sm ${message.includes("success") || message.includes("approved") || message.includes("Saved") ? "border-green-200 bg-green-50 text-green-700" : "border-red-200 bg-red-50 text-red-700"}`}>
+        <div className={`rounded-lg border p-3 text-sm ${message.includes("success") || message.includes("approved") || message.includes("Saved") || message.includes("resent") ? "border-green-200 bg-green-50 text-green-700" : "border-red-200 bg-red-50 text-red-700"}`}>
           {message}
         </div>
       )}
@@ -82,6 +96,18 @@ export function GuitaristReviewForm({ guitarist, videos, tabs, socials }: Props)
             className="rounded-full bg-red-600 px-6 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
           >
             Reject
+          </button>
+        </div>
+      )}
+
+      {isApproved && (
+        <div className="flex gap-3">
+          <button
+            onClick={handleResendInvite}
+            disabled={saving}
+            className="rounded-full bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary-hover disabled:opacity-50"
+          >
+            Resend Invite Email
           </button>
         </div>
       )}

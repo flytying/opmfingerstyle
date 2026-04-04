@@ -90,3 +90,36 @@ export async function rejectGuitarist(id: string) {
 
   return { success: true };
 }
+
+export async function resendInvite(id: string) {
+  const supabase = await createClient();
+  const serviceClient = await createServiceClient();
+
+  const { data: guitarist } = await supabase
+    .from("guitarists")
+    .select("contact_email, display_name")
+    .eq("id", id)
+    .single();
+
+  if (!guitarist?.contact_email) {
+    return { success: false, error: "Guitarist has no contact email." };
+  }
+
+  const { error } = await serviceClient.auth.admin.inviteUserByEmail(
+    guitarist.contact_email,
+    {
+      data: {
+        role: "guitarist",
+        display_name: guitarist.display_name,
+      },
+      redirectTo: "https://opmfingerstyle.com/auth/confirm",
+    }
+  );
+
+  if (error) {
+    console.error("Resend invite failed:", error);
+    return { success: false, error: `Failed to resend invite: ${error.message}` };
+  }
+
+  return { success: true };
+}
