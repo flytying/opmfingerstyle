@@ -243,7 +243,7 @@ export default async function VideoDetailPage({ params }: Props) {
           <aside className="space-y-6">
             {/* Tab download */}
             {matchingTab && (
-              <div className="rounded-xl border border-red-100 bg-red-50 p-6">
+              <div className="rounded-xl border border-border bg-background p-6">
                 <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">
                   Get the {video.title || "Guitar"} Tab
                 </h2>
@@ -258,11 +258,6 @@ export default async function VideoDetailPage({ params }: Props) {
                 >
                   Download Tab
                 </a>
-                {matchingTab.source_label && (
-                  <p className="mt-2 text-center text-xs text-muted">
-                    via {matchingTab.source_label}
-                  </p>
-                )}
               </div>
             )}
 
