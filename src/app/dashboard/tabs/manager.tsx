@@ -119,8 +119,8 @@ export function TabsManager({ guitaristId, tabs }: { guitaristId: string; tabs: 
                       {t.song_name || "—"} {t.source_label && `· ${t.source_label}`}
                     </p>
                   </div>
-                  <div className="ml-4 flex shrink-0 gap-2">
-                    <button onClick={() => setEditingId(t.id)} className="text-sm font-medium text-primary hover:text-primary-hover">
+                  <div className="ml-4 flex shrink-0 gap-4">
+                    <button onClick={() => setEditingId(t.id)} className="text-sm font-medium text-foreground hover:text-muted">
                       Edit
                     </button>
                     <button onClick={() => handleRemove(t.id)} className="text-sm text-red-600 hover:text-red-800">

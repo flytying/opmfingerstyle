@@ -153,8 +153,8 @@ export function VideosManager({ guitaristId, videos }: { guitaristId: string; vi
                     </a>
                     {v.description && <p className="mt-1 line-clamp-1 text-sm text-muted">{v.description}</p>}
                   </div>
-                  <div className="ml-4 flex shrink-0 gap-2">
-                    <button onClick={() => setEditingId(v.id)} className="text-sm font-medium text-primary hover:text-primary-hover">
+                  <div className="ml-4 flex shrink-0 gap-4">
+                    <button onClick={() => setEditingId(v.id)} className="text-sm font-medium text-foreground hover:text-muted">
                       Edit
                     </button>
                     <button onClick={() => handleRemove(v.id)} className="text-sm text-red-600 hover:text-red-800">
