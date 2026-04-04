@@ -1,14 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
-
-const dashNav = [
-  { href: "/dashboard", label: "Overview" },
-  { href: "/dashboard/profile", label: "Profile" },
-  { href: "/dashboard/videos", label: "Videos" },
-  { href: "/dashboard/tabs", label: "Tabs" },
-  { href: "/dashboard/socials", label: "Social Links" },
-];
+import { DashboardNavTabs } from "./nav-tabs";
 
 export default async function DashboardLayout({
   children,
@@ -69,18 +62,7 @@ export default async function DashboardLayout({
         </p>
       </div>
 
-      {/* Tabs navigation */}
-      <nav className="mt-6 flex gap-1 overflow-x-auto border-b border-border">
-        {dashNav.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="whitespace-nowrap border-b-2 border-transparent px-4 py-2 text-sm font-medium text-muted transition-colors hover:border-gray-300 hover:text-foreground"
-          >
-            {item.label}
-          </Link>
-        ))}
-      </nav>
+      <DashboardNavTabs />
 
       <div className="mt-6">{children}</div>
     </div>
