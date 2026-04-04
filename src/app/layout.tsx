@@ -28,6 +28,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3392449098044156"
+          crossOrigin="anonymous"
+        />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-EGPSP8NJ5L"
           strategy="afterInteractive"
@@ -40,11 +45,6 @@ export default function RootLayout({
             gtag('config', 'G-EGPSP8NJ5L');
           `}
         </Script>
-        <Script
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3392449098044156"
-          strategy="afterInteractive"
-          crossOrigin="anonymous"
-        />
       </head>
       <body className="min-h-full flex flex-col">
         <Header />
