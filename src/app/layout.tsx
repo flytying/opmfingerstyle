@@ -18,6 +18,10 @@ export const metadata: Metadata = {
   description:
     "Discover talented Filipino fingerstyle guitarists performing OPM songs. Browse profiles, watch performances, find tabs, and explore gear.",
   metadataBase: new URL("https://opmfingerstyle.com"),
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({
