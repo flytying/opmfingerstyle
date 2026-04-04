@@ -68,6 +68,7 @@ export interface Database {
           contact_email?: string | null;
           approval_status?: ApprovalStatus;
           featured?: boolean;
+          strikes?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -85,6 +86,7 @@ export interface Database {
           contact_email?: string | null;
           approval_status?: ApprovalStatus;
           featured?: boolean;
+          strikes?: number;
           created_at?: string;
           updated_at?: string;
         };

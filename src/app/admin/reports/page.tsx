@@ -1,12 +1,30 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { ReportActions } from "./actions-client";
 
 export default async function AdminReportsPage() {
   const supabase = await createClient();
+  const serviceClient = await createServiceClient();
+
   const { data: reports } = await supabase
     .from("video_reports")
-    .select("*, guitarist_videos(id, title, youtube_url, guitarist_id, guitarists(id, display_name, strikes, approval_status))")
+    .select("*")
     .order("created_at", { ascending: false });
+
+  // Fetch video + guitarist data for each report
+  const videoIds = [...new Set((reports || []).map((r) => r.video_id))];
+  const { data: videos } = await serviceClient
+    .from("guitarist_videos")
+    .select("id, title, youtube_url, guitarist_id")
+    .in("id", videoIds.length > 0 ? videoIds : ["none"]);
+
+  const guitaristIds = [...new Set((videos || []).map((v) => v.guitarist_id))];
+  const { data: guitarists } = await serviceClient
+    .from("guitarists")
+    .select("id, display_name, strikes, approval_status")
+    .in("id", guitaristIds.length > 0 ? guitaristIds : ["none"]);
+
+  const videoMap = new Map((videos || []).map((v) => [v.id, v]));
+  const guitaristMap = new Map((guitarists || []).map((g) => [g.id, g]));
 
   return (
     <div>
@@ -16,8 +34,8 @@ export default async function AdminReportsPage() {
       <div className="mt-6 space-y-4">
         {reports && reports.length > 0 ? (
           reports.map((report) => {
-            const video = report.guitarist_videos as { id: string; title: string; youtube_url: string; guitarist_id: string; guitarists: { id: string; display_name: string; strikes: number; approval_status: string } | null } | null;
-            const guitarist = video?.guitarists;
+            const video = videoMap.get(report.video_id);
+            const guitarist = video ? guitaristMap.get(video.guitarist_id) : null;
 
             return (
               <div
