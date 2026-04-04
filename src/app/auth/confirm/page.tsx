@@ -29,7 +29,7 @@ export default function AuthConfirmPage() {
     // Timeout fallback
     const timeout = setTimeout(() => {
       setStatus((prev) => (prev === "loading" ? "error" : prev));
-    }, 10000);
+    }, 30000);
 
     return () => clearTimeout(timeout);
   }, []);
