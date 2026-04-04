@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
-import { DashboardNavTabs } from "./nav-tabs";
+import { DashboardSidebar } from "./nav-tabs";
 
 export default async function DashboardLayout({
   children,
@@ -49,22 +49,26 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">
-          Welcome, {guitarist.display_name}
-        </h1>
-        <p className="mt-1 text-sm text-muted">
-          Manage your profile and content.{" "}
-          <Link href={`/guitarists/${guitarist.slug}`} className="text-primary hover:text-primary-hover">
-            View public profile &rarr;
-          </Link>
-        </p>
+    <div className="flex min-h-[calc(100vh-4rem)]">
+      <DashboardSidebar />
+
+      <div className="flex-1 bg-gray-50">
+        <div className="p-6 lg:p-8">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">
+              Welcome, {guitarist.display_name}
+            </h1>
+            <p className="mt-1 text-sm text-muted">
+              Manage your profile and content.{" "}
+              <Link href={`/guitarists/${guitarist.slug}`} className="text-primary hover:text-primary-hover">
+                View public profile &rarr;
+              </Link>
+            </p>
+          </div>
+
+          <div className="mt-6">{children}</div>
+        </div>
       </div>
-
-      <DashboardNavTabs />
-
-      <div className="mt-6">{children}</div>
     </div>
   );
 }
