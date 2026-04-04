@@ -1,7 +1,6 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import type { SocialPlatform } from "@/lib/supabase/types";
 import { slugify } from "@/lib/utils";
 import { notifyNewSubmission } from "@/lib/email";
 
@@ -40,8 +39,8 @@ export async function submitProfile(formData: FormData) {
     return { success: false, error: "A profile with this email already exists." };
   }
 
-  // Insert guitarist
-  const { data: guitarist, error: guitaristError } = await supabase
+  // Insert guitarist (no .select() — anon can't read back pending_review rows)
+  const { error: guitaristError } = await supabase
     .from("guitarists")
     .insert({
       slug,
@@ -53,33 +52,14 @@ export async function submitProfile(formData: FormData) {
       bio_full: bioFull,
       profile_photo_url: profilePhotoUrl,
       approval_status: "pending_review",
-    })
-    .select("id")
-    .single();
+    });
 
   if (guitaristError) {
     console.error("Failed to submit profile:", guitaristError);
     return { success: false, error: "Failed to submit profile. Please try again." };
   }
 
-  // Insert social links
-  const rawSocials: { platform: SocialPlatform; url: string | null }[] = [
-    { platform: "facebook" as const, url: formData.get("facebook_url") as string | null },
-    { platform: "instagram" as const, url: formData.get("instagram_url") as string | null },
-    { platform: "tiktok" as const, url: formData.get("tiktok_url") as string | null },
-    { platform: "youtube" as const, url: youtubeChannelUrl },
-  ];
-  const socialLinks = rawSocials.filter((s): s is { platform: SocialPlatform; url: string } => !!s.url);
-
-  if (socialLinks.length > 0 && guitarist) {
-    await supabase.from("social_links").insert(
-      socialLinks.map((s) => ({
-        guitarist_id: guitarist.id,
-        platform: s.platform,
-        external_url: s.url,
-      }))
-    );
-  }
+  // Social links will be added by the guitarist after approval via dashboard
 
   // Notify admin (non-blocking)
   notifyNewSubmission(displayName, contactEmail);
