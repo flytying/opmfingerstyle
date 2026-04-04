@@ -105,29 +105,41 @@ export async function resendInvite(id: string) {
     return { success: false, error: "Guitarist has no contact email." };
   }
 
-  // Try invite first (for new users), fall back to magic link (for existing users)
-  const { error: inviteError } = await serviceClient.auth.admin.inviteUserByEmail(
-    guitarist.contact_email,
-    {
-      data: {
-        role: "guitarist",
-        display_name: guitarist.display_name,
-      },
+  // Generate a password reset link via Supabase
+  const { data: linkData, error: linkError } = await serviceClient.auth.admin.generateLink({
+    type: "recovery",
+    email: guitarist.contact_email,
+    options: {
       redirectTo: "https://opmfingerstyle.com/auth/confirm",
-    }
-  );
+    },
+  });
 
-  if (inviteError) {
-    // User already exists — send password reset so they can set their password
-    const { error: resetError } = await serviceClient.auth.resetPasswordForEmail(
-      guitarist.contact_email,
-      { redirectTo: "https://opmfingerstyle.com/auth/confirm" }
-    );
+  if (linkError || !linkData?.properties?.action_link) {
+    console.error("Generate link failed:", linkError);
+    return { success: false, error: "Failed to generate invite link." };
+  }
 
-    if (resetError) {
-      console.error("Resend failed:", resetError);
-      return { success: false, error: `Failed to resend: ${resetError.message}` };
-    }
+  // Send the email directly via Resend
+  const { Resend } = await import("resend");
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
+  const { error: emailError } = await resend.emails.send({
+    from: "OPM Fingerstyle <noreply@opmfingerstyle.com>",
+    to: guitarist.contact_email,
+    subject: "Set up your OPM Fingerstyle account",
+    html: `
+      <h2>Welcome to OPM Fingerstyle!</h2>
+      <p>Hi ${guitarist.display_name},</p>
+      <p>Your guitarist profile has been approved! Click the link below to set your password and access your dashboard where you can manage your profile, videos, tabs, and social links.</p>
+      <p><a href="${linkData.properties.action_link}" style="display:inline-block;background:#D4A017;color:#fff;padding:12px 24px;border-radius:9999px;text-decoration:none;font-weight:600;">Set Your Password</a></p>
+      <p>If the button doesn't work, copy and paste this link:<br>${linkData.properties.action_link}</p>
+      <p>— OPM Fingerstyle Team</p>
+    `,
+  });
+
+  if (emailError) {
+    console.error("Email send failed:", emailError);
+    return { success: false, error: "Failed to send invite email." };
   }
 
   return { success: true };
