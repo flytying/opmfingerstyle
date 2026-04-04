@@ -50,6 +50,7 @@ export interface Database {
           contact_email: string | null;
           approval_status: ApprovalStatus;
           featured: boolean;
+          strikes: number;
           created_at: string;
           updated_at: string;
         };
@@ -316,6 +317,33 @@ export interface Database {
           subject?: string;
           message?: string;
           read?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      video_reports: {
+        Row: {
+          id: string;
+          video_id: string;
+          reason: string;
+          reporter_email: string | null;
+          status: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          video_id: string;
+          reason: string;
+          reporter_email?: string | null;
+          status?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          video_id?: string;
+          reason?: string;
+          reporter_email?: string | null;
+          status?: string;
           created_at?: string;
         };
         Relationships: [];

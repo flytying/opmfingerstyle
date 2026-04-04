@@ -6,6 +6,7 @@ const adminNav = [
   { href: "/admin", label: "Dashboard", icon: "home" },
   { href: "/admin/guitarists", label: "Guitarists", icon: "users" },
   { href: "/admin/gear", label: "Gear", icon: "guitar" },
+  { href: "/admin/reports", label: "Reports", icon: "flag" },
   { href: "/admin/messages", label: "Messages", icon: "mail" },
 ];
 
@@ -23,6 +24,11 @@ const icons: Record<string, React.ReactNode> = {
   guitar: (
     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" d="m9 9 10.5-3m0 6.553v3.75a2.25 2.25 0 0 1-1.632 2.163l-1.32.377a1.803 1.803 0 1 1-.99-3.467l2.31-.66a2.25 2.25 0 0 0 1.632-2.163Zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 0 1-1.632 2.163l-1.32.377a1.803 1.803 0 0 1-.99-3.467l2.31-.66A2.25 2.25 0 0 0 9 15.553Z" />
+    </svg>
+  ),
+  flag: (
+    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5" />
     </svg>
   ),
   mail: (

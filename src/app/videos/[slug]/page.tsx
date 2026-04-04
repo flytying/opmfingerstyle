@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getYouTubeId } from "@/lib/utils";
+import { ReportVideoButton } from "@/components/ui/report-video";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -274,6 +275,7 @@ export default async function VideoDetailPage({ params }: Props) {
                   YouTube Channel
                 </a>
               )}
+              <ReportVideoButton videoId={video.id} />
             </div>
           </aside>
         </div>
