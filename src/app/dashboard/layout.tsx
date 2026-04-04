@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
-import { AdminLogout } from "../admin/logout-button";
 
 const dashNav = [
   { href: "/dashboard", label: "Overview" },
@@ -21,7 +20,6 @@ export default async function DashboardLayout({
 
   if (!user) redirect("/login");
 
-  // Use service client to check guitarist status (bypasses RLS so we can see disabled accounts)
   const serviceClient = await createServiceClient();
   const { data: guitarist } = await serviceClient
     .from("guitarists")
@@ -46,15 +44,12 @@ export default async function DashboardLayout({
             Your account has been temporarily disabled. If you believe this is a
             mistake, please contact us and we&apos;ll look into it.
           </p>
-          <div className="mt-6 flex justify-center gap-3">
-            <Link
-              href="/contact"
-              className="rounded-full bg-red-600 px-6 py-2 text-sm font-medium text-white hover:bg-red-700"
-            >
-              Contact Us
-            </Link>
-            <AdminLogout />
-          </div>
+          <Link
+            href="/contact"
+            className="mt-6 inline-flex rounded-full bg-red-600 px-6 py-2 text-sm font-medium text-white hover:bg-red-700"
+          >
+            Contact Us
+          </Link>
         </div>
       </div>
     );
@@ -62,19 +57,16 @@ export default async function DashboardLayout({
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">
-            Welcome, {guitarist.display_name}
-          </h1>
-          <p className="mt-1 text-sm text-muted">
-            Manage your profile and content.{" "}
-            <Link href={`/guitarists/${guitarist.slug}`} className="text-primary hover:text-primary-hover">
-              View public profile &rarr;
-            </Link>
-          </p>
-        </div>
-        <AdminLogout />
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">
+          Welcome, {guitarist.display_name}
+        </h1>
+        <p className="mt-1 text-sm text-muted">
+          Manage your profile and content.{" "}
+          <Link href={`/guitarists/${guitarist.slug}`} className="text-primary hover:text-primary-hover">
+            View public profile &rarr;
+          </Link>
+        </p>
       </div>
 
       {/* Tabs navigation */}
