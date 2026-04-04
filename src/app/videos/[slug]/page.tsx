@@ -147,6 +147,20 @@ export default async function VideoDetailPage({ params }: Props) {
               {video.title || "Fingerstyle Guitar Cover"}
             </h1>
 
+            {/* Genre tags */}
+            {video.genre && video.genre.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {video.genre.map((g: string) => (
+                  <span
+                    key={g}
+                    className="rounded-full border border-border px-3 py-0.5 text-xs font-medium text-muted"
+                  >
+                    {g}
+                  </span>
+                ))}
+              </div>
+            )}
+
             {/* Artist info */}
             <div className="mt-4 flex items-center gap-3">
               {g?.profile_photo_url && (

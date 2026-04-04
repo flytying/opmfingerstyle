@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { slugify } from "@/lib/utils";
+import { detectGenres } from "@/lib/genre-detect";
 
 export async function addVideo(guitaristId: string, formData: FormData) {
   const supabase = await createClient();
@@ -16,12 +17,15 @@ export async function addVideo(guitaristId: string, formData: FormData) {
 
   const slug = `${slugify(title)}-${Date.now().toString(36)}`;
 
+  const genre = detectGenres(title, tabSongName, description);
+
   const { error } = await supabase.from("guitarist_videos").insert({
     guitarist_id: guitaristId,
     youtube_url,
     title,
     slug,
     description,
+    genre,
   });
 
   if (error) {
@@ -50,12 +54,14 @@ export async function updateVideo(videoId: string, formData: FormData) {
   const description = (formData.get("description") as string) || null;
 
   const slug = title ? `${slugify(title)}-${videoId.substring(0, 8)}` : undefined;
+  const genre = title ? detectGenres(title, null, description) : undefined;
 
   const { error } = await supabase.from("guitarist_videos").update({
     title,
     youtube_url,
     description,
     ...(slug && { slug }),
+    ...(genre && { genre }),
   }).eq("id", videoId);
 
   if (error) {

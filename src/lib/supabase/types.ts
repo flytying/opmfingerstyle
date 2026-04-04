@@ -97,6 +97,7 @@ export interface Database {
           title: string | null;
           slug: string | null;
           description: string | null;
+          genre: string[] | null;
           thumbnail_url: string | null;
           featured_order: number;
           created_at: string;
@@ -108,6 +109,7 @@ export interface Database {
           title?: string | null;
           slug?: string | null;
           description?: string | null;
+          genre?: string[] | null;
           thumbnail_url?: string | null;
           featured_order?: number;
           created_at?: string;
@@ -119,6 +121,7 @@ export interface Database {
           title?: string | null;
           slug?: string | null;
           description?: string | null;
+          genre?: string[] | null;
           thumbnail_url?: string | null;
           featured_order?: number;
           created_at?: string;
