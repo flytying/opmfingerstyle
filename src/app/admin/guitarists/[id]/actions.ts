@@ -41,17 +41,17 @@ export async function approveGuitarist(id: string) {
     return { success: false, error: "Guitarist has no contact email." };
   }
 
-  // Create auth user via service role (sends invite)
-  const { data: authUser, error: authError } = await serviceClient.auth.admin.inviteUserByEmail(
-    guitarist.contact_email,
-    {
-      data: {
-        role: "guitarist",
-        display_name: guitarist.display_name,
-      },
-      redirectTo: "https://opmfingerstyle.com/auth/confirm",
-    }
-  );
+  // Create auth user with a temporary random password
+  const tempPassword = crypto.randomUUID();
+  const { data: authUser, error: authError } = await serviceClient.auth.admin.createUser({
+    email: guitarist.contact_email,
+    password: tempPassword,
+    email_confirm: true,
+    user_metadata: {
+      role: "guitarist",
+      display_name: guitarist.display_name,
+    },
+  });
 
   if (authError) {
     console.error("Failed to create user:", authError);
@@ -70,6 +70,34 @@ export async function approveGuitarist(id: string) {
   if (updateError) {
     console.error("Failed to approve:", updateError);
     return { success: false, error: "Failed to update guitarist status." };
+  }
+
+  // Generate recovery link and send branded email via Resend
+  const { data: linkData } = await serviceClient.auth.admin.generateLink({
+    type: "recovery",
+    email: guitarist.contact_email,
+    options: {
+      redirectTo: "https://opmfingerstyle.com/auth/confirm",
+    },
+  });
+
+  if (linkData?.properties?.action_link) {
+    const { Resend } = await import("resend");
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    await resend.emails.send({
+      from: "OPM Fingerstyle <noreply@opmfingerstyle.com>",
+      to: guitarist.contact_email,
+      subject: "Welcome to OPM Fingerstyle — Set Your Password",
+      html: `
+        <h2>Welcome to OPM Fingerstyle!</h2>
+        <p>Hi ${guitarist.display_name},</p>
+        <p>Your guitarist profile has been approved! Click the link below to set your password and access your dashboard.</p>
+        <p><a href="${linkData.properties.action_link}" style="display:inline-block;background:#D4A017;color:#fff;padding:12px 24px;border-radius:9999px;text-decoration:none;font-weight:600;">Set Your Password</a></p>
+        <p>If the button doesn't work, copy and paste this link:<br><a href="${linkData.properties.action_link}">${linkData.properties.action_link}</a></p>
+        <p>— OPM Fingerstyle Team</p>
+      `,
+    });
   }
 
   return { success: true };
