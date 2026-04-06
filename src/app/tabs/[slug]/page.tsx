@@ -13,21 +13,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const supabase = await createClient();
 
+  // Try slug first, fall back to UUID id
   const { data: tab } = await supabase
     .from("tablature_links")
     .select("title, song_name, guitarists!inner(display_name, approval_status)")
-    .or(`slug.eq.${slug},id.eq.${slug}`)
+    .eq("slug", slug)
     .limit(1)
-    .single();
+    .maybeSingle();
 
-  if (!tab) return { title: "Tab Not Found" };
+  const resolved = tab ?? (await supabase
+    .from("tablature_links")
+    .select("title, song_name, guitarists!inner(display_name, approval_status)")
+    .eq("id", slug)
+    .maybeSingle()).data;
 
-  const g = tab.guitarists as { display_name: string; approval_status: string } | null;
-  const title = tab.title || "Guitar Tab";
+  if (!resolved) return { title: "Tab Not Found" };
+
+  const g = resolved.guitarists as { display_name: string; approval_status: string } | null;
+  const title = resolved.title || "Guitar Tab";
 
   return {
     title: `${title} — ${g?.display_name || "OPM Fingerstyle"} | OPM Fingerstyle Tabs`,
-    description: `Get the fingerstyle guitar tab for ${title}${tab.song_name ? ` (${tab.song_name})` : ""} by ${g?.display_name || "a Filipino fingerstyle guitarist"}.`,
+    description: `Get the fingerstyle guitar tab for ${title}${resolved.song_name ? ` (${resolved.song_name})` : ""} by ${g?.display_name || "a Filipino fingerstyle guitarist"}.`,
     openGraph: {
       title: `${title} | OPM Fingerstyle Tabs`,
       description: `Fingerstyle guitar tab for ${title} by ${g?.display_name}`,
@@ -39,12 +46,19 @@ export default async function TabDetailPage({ params }: Props) {
   const { slug } = await params;
   const supabase = await createClient();
 
-  const { data: tab } = await supabase
+  // Try slug first, fall back to UUID id
+  const { data: tabBySlug } = await supabase
     .from("tablature_links")
     .select("*, guitarists!inner(id, slug, display_name, youtube_channel_url, profile_photo_url, approval_status)")
-    .or(`slug.eq.${slug},id.eq.${slug}`)
+    .eq("slug", slug)
     .limit(1)
-    .single();
+    .maybeSingle();
+
+  const tab = tabBySlug ?? (await supabase
+    .from("tablature_links")
+    .select("*, guitarists!inner(id, slug, display_name, youtube_channel_url, profile_photo_url, approval_status)")
+    .eq("id", slug)
+    .maybeSingle()).data;
 
   if (!tab) notFound();
 
