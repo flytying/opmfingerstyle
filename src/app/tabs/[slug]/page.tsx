@@ -191,7 +191,7 @@ export default async function TabDetailPage({ params }: Props) {
           <aside className="space-y-6">
             {/* Watch the Performance */}
             {matchingVideo && youtubeId && (
-              <div className="rounded-xl border border-border p-6">
+              <div>
                 <h2 className="font-bold text-foreground">Watch the Performance</h2>
                 <div className="mt-3 overflow-hidden rounded-lg">
                   <div className="relative aspect-video bg-gray-900">
@@ -204,12 +204,6 @@ export default async function TabDetailPage({ params }: Props) {
                     />
                   </div>
                 </div>
-                <Link
-                  href={`/videos/${matchingVideo.slug || matchingVideo.id}`}
-                  className="mt-3 block text-sm font-medium text-primary hover:underline"
-                >
-                  View video details &rarr;
-                </Link>
               </div>
             )}
 
