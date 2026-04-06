@@ -133,41 +133,15 @@ export default async function TabDetailPage({ params }: Props) {
               {tab.title}
             </h1>
 
-            {/* Meta info */}
-            <div className="mt-4 flex flex-wrap items-center gap-3">
-              {tab.song_name && (
-                <span className="text-muted">
-                  Song: <span className="font-medium text-foreground">{tab.song_name}</span>
-                </span>
-              )}
-              {tab.source_label && (
-                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-muted">
-                  {tab.source_label}
-                </span>
-              )}
-            </div>
-
-            {/* Artist info */}
-            <div className="mt-5 flex items-center gap-3">
-              {g?.profile_photo_url && (
-                <Image
-                  src={g.profile_photo_url}
-                  alt={g.display_name}
-                  width={40}
-                  height={40}
-                  className="rounded-full object-cover"
-                />
-              )}
-              <div>
-                <Link
-                  href={`/guitarists/${g?.slug}`}
-                  className="font-medium text-foreground hover:text-primary"
-                >
-                  {g?.display_name}
-                </Link>
-                <p className="text-sm text-muted">Fingerstyle Guitarist</p>
-              </div>
-            </div>
+            {/* Description */}
+            <p className="mt-4 text-muted leading-relaxed">
+              Browse OPM fingerstyle tabs and learn to play Filipino classics on acoustic guitar.
+              This arrangement by{" "}
+              <Link href={`/guitarists/${g?.slug}`} className="font-medium text-foreground hover:text-primary">
+                {g?.display_name}
+              </Link>{" "}
+              includes accurate tablature so you can master every note of this OPM fingerstyle cover.
+            </p>
 
             {/* CTA Button */}
             <div className="mt-8">
