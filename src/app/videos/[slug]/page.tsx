@@ -69,7 +69,7 @@ export default async function VideoDetailPage({ params }: Props) {
   const [{ data: allTabs }, { data: moreVideos }] = await Promise.all([
     supabase
       .from("tablature_links")
-      .select("id, title, song_name, external_url, source_label")
+      .select("id, slug, title, song_name, external_url, source_label")
       .eq("guitarist_id", g?.id || ""),
     supabase
       .from("guitarist_videos")
@@ -231,14 +231,12 @@ export default async function VideoDetailPage({ params }: Props) {
                 <p className="mt-2 text-sm text-muted">
                   Learn to play this arrangement with accurate guitar tablature.
                 </p>
-                <a
-                  href={matchingTab.external_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href={`/tabs/${matchingTab.slug || matchingTab.id}`}
                   className="mt-4 flex w-full items-center justify-center rounded-lg bg-red-600 px-4 py-3 text-sm font-bold uppercase tracking-wider text-white transition-colors hover:bg-red-700"
                 >
-                  Download Tab
-                </a>
+                  View Tab
+                </Link>
               </div>
             )}
 

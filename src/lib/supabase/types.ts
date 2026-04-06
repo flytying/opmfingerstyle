@@ -144,6 +144,7 @@ export interface Database {
           id: string;
           guitarist_id: string;
           title: string;
+          slug: string | null;
           song_name: string | null;
           source_label: string | null;
           external_url: string;
@@ -153,6 +154,7 @@ export interface Database {
           id?: string;
           guitarist_id: string;
           title: string;
+          slug?: string | null;
           song_name?: string | null;
           source_label?: string | null;
           external_url: string;
@@ -162,6 +164,7 @@ export interface Database {
           id?: string;
           guitarist_id?: string;
           title?: string;
+          slug?: string | null;
           song_name?: string | null;
           source_label?: string | null;
           external_url?: string;
