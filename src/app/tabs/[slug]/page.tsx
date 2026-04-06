@@ -158,16 +158,42 @@ export default async function TabDetailPage({ params }: Props) {
               </a>
             </div>
 
-            {/* Matching Video */}
-            {matchingVideo && youtubeId && (
+            {/* More tabs from artist */}
+            {moreTabs && moreTabs.length > 0 && (
               <div className="mt-10">
                 <h2 className="text-xl font-bold text-foreground">
-                  Watch the Performance
+                  More Tabs from {g?.display_name}
                 </h2>
-                <p className="mt-1 text-sm text-muted">
-                  See how {g?.display_name} plays this arrangement.
-                </p>
-                <div className="mt-4 overflow-hidden rounded-xl">
+                <div className="mt-4 space-y-3">
+                  {moreTabs.map((t) => (
+                    <Link
+                      key={t.id}
+                      href={`/tabs/${t.slug || t.id}`}
+                      className="flex items-center justify-between rounded-lg border border-border p-3 transition-colors hover:border-primary hover:bg-primary-light"
+                    >
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{t.title}</p>
+                        {t.song_name && (
+                          <p className="text-xs text-muted">{t.song_name}</p>
+                        )}
+                      </div>
+                      <svg className="h-4 w-4 text-muted" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                      </svg>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <aside className="space-y-6">
+            {/* Watch the Performance */}
+            {matchingVideo && youtubeId && (
+              <div className="rounded-xl border border-border p-6">
+                <h2 className="font-bold text-foreground">Watch the Performance</h2>
+                <div className="mt-3 overflow-hidden rounded-lg">
                   <div className="relative aspect-video bg-gray-900">
                     <iframe
                       src={`https://www.youtube.com/embed/${youtubeId}?rel=0`}
@@ -178,43 +204,15 @@ export default async function TabDetailPage({ params }: Props) {
                     />
                   </div>
                 </div>
-                <div className="mt-3">
-                  <Link
-                    href={`/videos/${matchingVideo.slug || matchingVideo.id}`}
-                    className="text-sm font-medium text-primary hover:underline"
-                  >
-                    View video details &rarr;
-                  </Link>
-                </div>
+                <Link
+                  href={`/videos/${matchingVideo.slug || matchingVideo.id}`}
+                  className="mt-3 block text-sm font-medium text-primary hover:underline"
+                >
+                  View video details &rarr;
+                </Link>
               </div>
             )}
 
-            {/* No matching video — show a helpful message */}
-            {!matchingVideo && (
-              <div className="mt-10 rounded-xl border border-border bg-surface p-6">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-light">
-                    <svg className="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="m9 9 10.5-3m0 6.553v3.75a2.25 2.25 0 0 1-1.632 2.163l-1.32.377a1.803 1.803 0 1 1-.99-3.467l2.31-.66a2.25 2.25 0 0 0 1.632-2.163Zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 0 1-1.632 2.163l-1.32.377a1.803 1.803 0 0 1-.99-3.467l2.31-.66A2.25 2.25 0 0 0 9 15.553Z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-foreground">Learn this arrangement</h3>
-                    <p className="mt-1 text-sm text-muted">
-                      Use the tab link above to access the full tablature. Check out{" "}
-                      <Link href={`/guitarists/${g?.slug}`} className="text-primary hover:underline">
-                        {g?.display_name}&apos;s profile
-                      </Link>{" "}
-                      for more of their fingerstyle covers and arrangements.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Sidebar */}
-          <aside className="space-y-6">
             {/* Artist card */}
             <div className="rounded-xl border border-border p-6">
               <h2 className="font-bold text-foreground">About the Artist</h2>
@@ -249,29 +247,6 @@ export default async function TabDetailPage({ params }: Props) {
                 </a>
               )}
             </div>
-
-            {/* More tabs from artist */}
-            {moreTabs && moreTabs.length > 0 && (
-              <div className="rounded-xl border border-border p-6">
-                <h2 className="font-bold text-foreground">
-                  More Tabs from {g?.display_name}
-                </h2>
-                <div className="mt-4 space-y-3">
-                  {moreTabs.map((t) => (
-                    <Link
-                      key={t.id}
-                      href={`/tabs/${t.slug || t.id}`}
-                      className="block rounded-lg p-2 transition-colors hover:bg-surface"
-                    >
-                      <p className="text-sm font-medium text-foreground">{t.title}</p>
-                      {t.song_name && (
-                        <p className="text-xs text-muted">{t.song_name}</p>
-                      )}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
           </aside>
         </div>
       </div>
