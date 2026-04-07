@@ -151,7 +151,7 @@ export default async function GuitaristProfilePage({ params }: Props) {
             {tabs && tabs.length > 0 && (
               <section className="mt-12">
                 <h2 className="text-2xl font-bold text-foreground">
-                  Tabs & Arrangements
+                  OPM Fingerstyle Tabs
                 </h2>
                 <div className="mt-6 space-y-3">
                   {tabs.map((tab) => (
