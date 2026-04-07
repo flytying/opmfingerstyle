@@ -162,7 +162,7 @@ export default async function GuitaristProfilePage({ params }: Props) {
                     >
                       <div>
                         <p className="font-medium text-foreground">
-                          {tab.title}
+                          {tab.title.replace(/\s*\(?tab\)?$/i, "")}
                         </p>
                         {tab.song_name && (
                           <p className="mt-0.5 text-sm text-muted">

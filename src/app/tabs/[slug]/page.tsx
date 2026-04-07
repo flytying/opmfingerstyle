@@ -123,7 +123,7 @@ export default async function TabDetailPage({ params }: Props) {
         <nav className="mb-6 text-sm text-muted">
           <Link href="/tabs" className="hover:text-primary">Tabs</Link>
           <span className="mx-2">/</span>
-          <span className="text-foreground">{tab.title}</span>
+          <span className="text-foreground">{tab.title.replace(/\s*\(?tab\)?$/i, "")}</span>
         </nav>
 
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
@@ -172,7 +172,7 @@ export default async function TabDetailPage({ params }: Props) {
                       className="flex items-center justify-between rounded-lg border border-border p-3 transition-colors hover:border-primary hover:bg-primary-light"
                     >
                       <div>
-                        <p className="text-sm font-medium text-foreground">{t.title}</p>
+                        <p className="text-sm font-medium text-foreground">{t.title.replace(/\s*\(?tab\)?$/i, "")}</p>
                         {t.song_name && (
                           <p className="text-xs text-muted">{t.song_name}</p>
                         )}

@@ -91,7 +91,7 @@ export default async function TabsPage({ searchParams }: Props) {
                 className="flex items-center justify-between rounded-lg border border-border p-4 transition-colors hover:border-primary hover:bg-primary-light"
               >
                 <div>
-                  <p className="font-medium text-foreground">{tab.title}</p>
+                  <p className="font-medium text-foreground">{tab.title.replace(/\s*\(?tab\)?$/i, "")}</p>
                   <div className="mt-1 flex items-center gap-2 text-sm text-muted">
                     {tab.song_name && <span>{tab.song_name}</span>}
                     {tab.song_name && g?.display_name && <span>&middot;</span>}
