@@ -5,7 +5,7 @@ import { VideoCard } from "@/components/ui/video-card";
 import { VideoSearchFilter } from "./search-filter";
 
 export const metadata: Metadata = {
-  title: "Videos",
+  title: "Fingerstyle Guitar Videos | OPM Fingerstyle",
   description:
     "Watch OPM fingerstyle guitar performances from talented Filipino artists.",
 };
