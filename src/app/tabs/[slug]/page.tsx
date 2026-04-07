@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = resolved.title || "Guitar Tab";
 
   return {
-    title: `${title} — ${g?.display_name || "OPM Fingerstyle"} | OPM Fingerstyle Tabs`,
+    title: `${title.replace(/\s*\(?tab\)?$/i, "")} Guitar Cover + TABS | OPM Fingerstyle Tabs`,
     description: `Get the fingerstyle guitar tab for ${title}${resolved.song_name ? ` (${resolved.song_name})` : ""} by ${g?.display_name || "a Filipino fingerstyle guitarist"}.`,
     openGraph: {
       title: `${title} | OPM Fingerstyle Tabs`,
@@ -130,7 +130,7 @@ export default async function TabDetailPage({ params }: Props) {
           {/* Main content */}
           <div className="lg:col-span-2">
             <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              {tab.title}
+              {tab.title.replace(/\s*\(?tab\)?$/i, "")}
             </h1>
 
             {/* Description */}
